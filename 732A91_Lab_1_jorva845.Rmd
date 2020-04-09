@@ -11,6 +11,7 @@ knitr::opts_chunk$set(fig.width=9, fig.height = 4.1)
 library(tidyverse)
 library(dplyr)
 library(knitr)
+library(LaplacesDemon)
 RNGversion("3.6.2")
 set.seed(12345)
 ```
@@ -96,15 +97,62 @@ density(logodds)
 
 \newpage
 
+# 2. Log-normal distribution and the Gini coefficient
 
+*Assume that you have asked 10 randomly selected persons about their monthly income (in thousands Swedish Krona) and obtained the following ten observations: 44, 25, 45, 52, 30, 63, 19, 50, 34 and 67. A common model for non-negative continuous variables is the log-normal distribution. The log-normal distribution $log(N(\mu, \sigma^2))$ has density function: *
 
+$$p(y|\mu,\sigma^2) = \frac{1}{y*\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(log(y)-\mu)^2}$$
+*For y>0, $\mu>0 and \sigma^2>0$. The log-normal distribution is related to the normal distribution as follows: if $y ~ log N(\mu,\sigma^2)$ then $log(y) ~ N(\mu,\sigma^2)$. Let $y_1, ..., y_n|\mu,\sigma^2 ~^{iid} log(N(\mu,\sigma^2))$, where $\mu = 3.7$ is assumed to be known but $\sigma^2$ is unknown with non-informative prior $p(\sigma^2) \propto \frac{1}{\sigma^2}$. The posterior for the $\sigma^2$ is the $Inv - \chi^2(n, \tau^2)$ distribution, where*
 
+$$\tau^2=\frac{\sum_{i=1}^{n}(log(y_i)-\mu)^2}{n}$$
 
+## a.
 
+*Simulate 10,000 draws from the posterior of $\sigma^2$ (assuming $\mu = 3.7$) and compare with the theoretical $Inv - \chi^2(n,\tau^2)$ posterior distribution.*
 
+We worked with the log of the data, assuming that is approximately normally distributed with $N(\mu,\sigma^2)$
 
+```{r, echo=F}
+# ---------------------------------------------------------
+# 2a
+y <- c(44,25,45,52,30,63,19,50,34,67)
+n <- length(y)
+logy <- log(y)
+nDraws <- 10000
+mu <- 3.7
 
+# Code based on Mattias Villani's NormalNonInfoPrior.R, found on https://github.com/STIMALiU/BayesLearnCourse/blob/master/Code/NormalNonInfoPrior.R~
+LogNormalNonInfoPrior <- function(nDraws, data, mu){
+  datamean <- mean(data)
+  n <- length(data)
+  tau2 <- sum((data-mu)^2) / n
+  PostDraws <- matrix(0,nDraws,2)
+  PostDraws[,1] <- ((n-1)*tau2)/rchisq(nDraws,n-1)
+  PostDraws[,2] <- datamean+rnorm(nDraws,0,1)*sqrt(PostDraws[,1]/n)
+  return(PostDraws)
+}
 
+#tau2 <- sum((logy-mu)^2) / n
+tau2<-rinvchisq(nDraws, n-1, scale=1/(n-1))
+
+PostDraws<-LogNormalNonInfoPrior(10000,logy, mu) 
+
+p1<-hist(PostDraws[,1], breaks = 50, col = "red") 			# Plotting the histogram of mu-draws
+p2<-hist(tau2, breaks = 50, col = "blue")
+plot(p1, col=rgb(0,0,1,1/4), ylim = c(0,3500), xlim = c(0,0.90))
+plot(p2, col=rgb(1,0,1,1/4), add=T)
+legend(x = 0.5, y = 3000, legend = c("Posterior Draws", "Tau Squared"), col = c(rgb(0,0,1,1/4), col=rgb(1,0,1,1/4)), lwd = c(3,3), cex = 0.7)
+```
+
+## b. 
+
+**
+
+```{r, echo=F}
+# ---------------------------------------------------------
+# 2b
+
+```
 
 \newpage
 
