@@ -1,0 +1,114 @@
+---
+title: "732A91 - Lab 1"
+author: "Joris van Doorn || Weng Hang Wong"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height = 4.1) 
+library(tidyverse)
+library(dplyr)
+library(knitr)
+RNGversion("3.6.2")
+set.seed(12345)
+```
+
+# 1. Bernoulli ... again.
+
+*Let $y_1, ..., y_n | \theta ~ Bern(\theta)$, and assume that you have obtained a sample with s = 5 successes in n = 20 trials. Assume a $Beta(\alpha_0, \beta_0$ prior for $\theta$ and let $\alpha_0 = \beta_0 = 2$*
+
+## a. 
+
+*Draw random numbers from the posterior $\theta|y ~ Beta(\alpha_0 + s, \beta_0 + f), y = (y_1, ..., y_n)$, and verify graphically that the posterior mean and standard deviation converges to the true values as the number of random draws grows large.*
+
+```{r, echo = F}
+# ---------------------------------------------------------
+# 1a
+
+a = b = 2
+n = 20
+s = 5
+nDraws = 10000
+#xGrid <- seq(0.001, 0.999, by=0.001)
+#posterior = dbeta(xGrid, a+s, b+(n-s))
+
+means <- c()
+sds <- c()
+
+set.seed(12345)
+
+for(i in 1:nDraws){
+  xGrid <- seq(1/nDraws, i/nDraws, by=1/nDraws)
+  posterior = dbeta(xGrid, a+s, b+(n-s))
+  means[i] <- mean(posterior)
+  sds[i] <- sd(posterior)
+  
+  #at("\nNumber of Draws: ", i , "\nMean: ", mean(posterior), "\nStandard Deviation: ", sd(posterior))
+}
+
+cat("Number of Draws: ", nDraws , "\nPosterior Mean: ", means[nDraws], "\nPosterior Standard Deviation: ", sds[nDraws])
+
+plot(xGrid, means, type = 'l', lwd = 3, col = "red")
+lines(xGrid, sds, lwd = 3, col = "blue")
+legend(x = max(xGrid)*0.70, y = 0.95*max(means), legend = c("Posterior Mean", "Posterior Standard Deviation"), col = c("red", "blue"), lwd = c(3,3), cex = 0.7)
+```
+
+## b. 
+
+*Use simulation (nDraws = 10000) to compute the posterior probability $Pr(\theta > 0.3|y)$ and compare with the exact value*
+
+```{r, echo = F}
+# ---------------------------------------------------------
+# 1b
+
+xGrid <- seq(1/nDraws, nDraws/nDraws, by=1/nDraws)
+posterior = pbeta(xGrid, a+s, b+(n-s)) # Ask for the difference between pbeta & dbeta
+
+prob_03 <- posterior[posterior > 0.3]
+prob <- length(prob_03)/nDraws
+
+cat("The probability of theta being larger than 0.3 is: ", prob)
+```
+
+## c. 
+
+*Compute the posterior distribution of the log-odds $\phi$*
+
+```{r, echo=F}
+# ---------------------------------------------------------
+# 1c
+
+xGrid <- seq(1/nDraws, nDraws/nDraws, by=1/nDraws)
+posterior = dbeta(xGrid, a+s, b+(n-s))
+
+logodds <- c()
+
+for(i in 1:length(posterior)){
+  logodds[i] <- log(abs(posterior[i]/(1-posterior[i])))
+}
+
+hist(logodds, breaks = 100)
+plot(1:10000,logodds)
+density(logodds)
+```
+
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+# Appendix
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE,results='show'}
+```
