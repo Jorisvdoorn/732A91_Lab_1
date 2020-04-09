@@ -146,7 +146,7 @@ legend(x = 0.5, y = 3000, legend = c("Posterior Draws", "Tau Squared"), col = c(
 
 ## b. 
 
-*The most common measure of income inequality is the Gini coefficient, G, where $0\leqG\leq1$. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\frac{\sigma}{\sqrt{2}}-1)$ when incomes follow a $logN(\mu,\sigma^2)$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.*
+*The most common measure of income inequality is the Gini coefficient, G, where $0\leq G \leq 1$. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\frac{\sigma}{\sqrt{2}}-1)$ when incomes follow a $logN(\mu,\sigma^2)$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.*
 
 ```{r, echo=F}
 # ---------------------------------------------------------
