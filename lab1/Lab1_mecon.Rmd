@@ -44,7 +44,8 @@ $$\theta|y\sim Beta(\alpha_0 + s, \beta_0 + f )$$
 From the above given posterior, we know that $\alpha = \alpha_0 + s = 7$, $\beta=\beta_0 +f = 17$. By using the alpha and beta we have, it is possible to simulate the random samples from the rbeta() function. With the growing number of random draws(1:500), we can plot the samples and investigate how the mean and standard deviation distributed. 
 
 
-```{r, echo=F}
+```{r, echo=F, out.width = "80%"}
+#1.a
 
 ## Draw random numbers from the posterior
 set.seed(12345)
@@ -72,12 +73,12 @@ for(i in 1:n){
 }
 
 cat("The true mean is:", true_mean)
-plot( veri_means, main="Posterior Mean Verify", xlab="n", ylab="Posterior means")
+plot( veri_means, main="Posterior Mean Verify", xlab="n", ylab="Posterior means",col="orange")
 abline(h=true_mean, col="red", lwd=2)
 legend("topright",legend="True mean", lty=1,col="red",lwd=2)
 
 cat("The true Standard deviation is:", true_sd)
-plot(veri_sd, main="Posterior Std dev Verify", xlab="n", ylab="Posterior Standard Deviation",ylim=c(0.04,0.15))
+plot(veri_sd, main="Posterior Std dev Verify", xlab="n", ylab="Posterior Standard Deviation",ylim=c(0.04,0.15),col="orange")
 abline(h=true_sd, col="red", lwd=2)
 legend("topright",legend="True std dev", lty=1,col="red",lwd=2)
 
@@ -90,7 +91,7 @@ According to the two figures above, it is successfully verified the posterior me
 From the simulation of nDraws = 10000, the posterior probability $Pr(\theta >0.3|y)$ is 0.4392, and it is very close to the true probability computed from the pbeta() function, which is 0.4399472.
 
 ```{r echo=F}
-
+# 1.b
 set.seed(12345)
 nDraws=10000
 beta_sample2 = rbeta(nDraws, alpha, beta)
@@ -107,12 +108,12 @@ cat("The true probability is :", real_prob)
 ### (c) Compute the posterior distribution of the log-odds $\phi = log\frac{\theta}{(1-\theta)}$ (nDraws = 10000). [Hint: hist() and density() might come in handy]
 
 
-```{r, echo=F}
-
+```{r, echo=F, out.width = "80%"}
+#1.c
 log_odd = log(beta_sample2/(1-beta_sample2))
 
-hist(log_odd)
-plot(density(log_odd))
+hist(log_odd, freq = F, main="Simulated log-odds distribution", xlab="",col="grey")
+lines(density(log_odd), col="red", lwd=2)
 #log_odd
 ```
 
@@ -120,33 +121,93 @@ plot(density(log_odd))
 # 2 Log-normal distribution and the Gini coefficient.
 Assume that you have asked 10 randomly selected persons about their monthly income (in thousands Swedish Krona) and obtained the following ten observations: 44, 25, 45, 52, 30, 63, 19, 50, 34 and 67. A common model for non-negative continuous variables is the log-normal distribution. The log-normal distribution $log(N(\mu, \sigma^2))$ has density function: *
 $$p(y|\mu,\sigma^2) = \frac{1}{y*\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(log(y)-\mu)^2}$$
-*For y>0, $\mu>0$  and $\sigma^2>0$. The log-normal distribution is related to the normal distribution as follows: if $y ~ log N(\mu,\sigma^2)$ then $log(y) ~ N(\mu,\sigma^2)$. Let $y_1, ..., y_n|\mu,\sigma^2 ~^{iid} log(N(\mu,\sigma^2))$, where $\mu = 3.7$ is assumed to be known but $\sigma^2$ is unknown with non-informative prior $p(\sigma^2) \propto \frac{1}{\sigma^2}$. The posterior for the $\sigma^2$ is the $Inv - \chi^2(n, \tau^2)$ distribution, where
+For y>0, $\mu>0$  and $\sigma^2>0$. The log-normal distribution is related to the normal distribution as follows: if $y ~ log N(\mu,\sigma^2)$ then $log(y) ~ N(\mu,\sigma^2)$. Let $y_1, ..., y_n|\mu,\sigma^2 ~^{iid} log(N(\mu,\sigma^2))$, where $\mu = 3.7$ is assumed to be known but $\sigma^2$ is unknown with non-informative prior $p(\sigma^2) \propto \frac{1}{\sigma^2}$. The posterior for the $\sigma^2$ is the $Inv - \chi^2(n, \tau^2)$ distribution, where
 
 $$\tau^2=\frac{\sum_{i=1}^{n}(log(y_i)-\mu)^2}{n}$$
 
 ### (a) Simulate 10,000 draws from the posterior of $\sigma^2$ (assuming $\mu = 3.7$) and compare with the theoretical $Inv - \chi^2(n,\tau^2)$ posterior distribution.
 
+We can simulate 10,000 samples from the posterior of $\sigma^2$ using rchisq(). First, we draw $X\sim\chi^2(n-1)$ then compute $\sigma^2= \frac{\tau^2n}{X}$. To compare with the theoretical $Inv-\chi^2(n, \tau^2)$, where the scaled parameter is $\tau^2$, we can use the invrchisq() draw 10,000 samples of the variance. (Source: Wikipedia https://en.wikipedia.org/wiki/Scaled_inverse_chi-squared_distribution)
 
-```{r}
+Looking at the two histagram belows, there are no diffierence between them.
 
+```{r  echo=F, out.width = "80%",fig.align='center'}
+#2.a
+library(LaplacesDemon)
 y = c(44, 25, 45, 52, 30, 63, 19, 50, 34 ,67)
 n=10
 mu = 3.7
+nDraws =10000
 
-tau2 = sum((log(y)-mu)^2)/n
+tau_2 = sum((log(y)-mu)^2)/n
 
-set.seed(12345)
+###simulation
+#set.seed(12345)
 var=c()
-for(i in 1:10000){
-  chi_sample = rchisq(n=1, df=10 )
-  var[i] = (tau2*n)/chi_sample
+for(i in 1:nDraws){
+  chi_sample = rchisq(n=1, df=n)
+  var[i] = (tau_2*n)/chi_sample
 }
 
-hist(var)
+###therotical inv-chi-square distuibution (n,T^2)
+thero_tau = rinvchisq(nDraws, n, tau_2)
 
-thero_tau = rinvchisq
+
+### plot the posterior var and the theoretical var
+hist(var, freq = F,xlim=c(0,3.5),ylim=c(0,6.5), main = "Simulated Inv-Chi-Square", xlab="Variance",col="grey")
+lines(density(var), col="red", lwd=2)
+
+hist(thero_tau,freq=F,, xlim=c(0,3.5),ylim=c(0,6.5), main="Theoretical Inv-Chi-Square distribution", xlab="Variance", col="grey")
+lines(density(thero_tau), lwd=2, col="red")
 
 ```
+
+### (b) The most common measure of income inequality is the Gini coefficient, G, where $0\leq G \leq 1$. G = 0 means a completely equal income distribution, whereas G = 1 means complete income inequality. See Wikipedia for more information. It can be shown that $G = 2\phi(\frac{\sigma}{\sqrt{2}}-1)$ when incomes follow a $logN(\mu,\sigma^2)$ distribution. $\phi(z)$ is the cumulative distribution function (CDF) for the standard normal distribution with mean zero and unit variance. Use the posterior draws in a) to compute the posterior distribution of the Gini coefficient G for the current data set.
+
+To compute the posterior distribution of the Gini coefficient, we use the posterior variance $\sigma^2$ we had from above and apply it to the cumulative distribution function for the standard normal distribution. 
+$$G = 2\Phi(\sigma/\sqrt{2})-1$$
+
+
+```{r echo=F,fig.align='center'}
+# 2.b
+
+### gini coefficient
+gini = 2*pnorm(sqrt(var/2))-1
+
+hist(gini, freq=F, ylim=c(0,10),breaks=30, main="Histogram of Gini coefficient", xlab="Gini coefficient",col="grey")
+
+
+```
+
+
+From the above histogram, the Gini coefficient is mainly concentrated on about 0.2 and it's overall lower than 0.5, meaning that we can easily say the income distribution is quite equal. 
+
+### (c) Use the posterior draws from b) to compute a 90% equal tail credible interval for G. A 90% equal tail interval (a, b) cuts off 5% percent of the posterior probability mass to the left of a, and 5% to the right of b. Also, do a kernel density estimate of the posterior of G using the density function in R with default settings, and use that kernel density estimate to compute a 90% Highest Posterior Density interval for G. Compare the two intervals.
+
+```{r echo=F}
+#2.c
+
+### equal tail CI
+CI=quantile(gini, c(0.05,0.95)) 
+#0.1602085 0.3357992 
+
+
+### HPD
+gini_x = density(gini)$x
+gini_dens = density(gini)$y
+
+
+
+plot(density(gini), lwd=2, main="Posterior distribution of the Gini coefficient")
+abline(v=CI)
+
+
+```
+
+
+# 3. Bayesian inference
+
+
 
 
 
