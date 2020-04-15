@@ -149,6 +149,7 @@ for(i in 1:nDraws){
   var[i] = (tau_2*n)/chi_sample
 }
 
+library(LaplacesDemon)
 ###therotical inv-chi-square distuibution (n,T^2)
 thero_tau = rinvchisq(nDraws, n, tau_2)
 
@@ -196,7 +197,10 @@ CI=quantile(gini, c(0.05,0.95))
 gini_x = density(gini)$x
 gini_dens = density(gini)$y
 
+sorted = cbind(seq(1,length(gini_dens)), sort(gini_dens,decreasing = T))
+plot(sorted)
 
+tot = auc(sorted[,1],sorted[,2])
 
 plot(density(gini), lwd=2, main="Posterior distribution of the Gini coefficient")
 abline(v=CI)
