@@ -38,7 +38,7 @@ $$p(\theta) = \frac{\Gamma(\alpha_0+\beta_0)}{\Gamma(\alpha_0)\Gamma(\beta_0)}\t
 *We have:*
 
 
-Posterior$\propto$likelihood*prior
+Posterior$\propto$likelihood$\cdot$prior
 
 $$\theta|y\sim Beta(\alpha_0 + s, \beta_0 + f )$$
 From the above given posterior, we know that $\alpha = \alpha_0 + s = 7$, $\beta=\beta_0 +f = 17$. By using the alpha and beta we have, it is possible to simulate the random samples from the rbeta() function. With the growing number of random draws(1:500), we can plot the samples and investigate how the mean and standard deviation distributed. 
@@ -149,6 +149,7 @@ for(i in 1:nDraws){
   var[i] = (tau_2*n)/chi_sample
 }
 
+library(LaplacesDemon)
 ###therotical inv-chi-square distuibution (n,T^2)
 thero_tau = rinvchisq(nDraws, n, tau_2)
 
@@ -199,18 +200,66 @@ gini_dens = density(gini)$y
 
 
 plot(density(gini), lwd=2, main="Posterior distribution of the Gini coefficient")
-abline(v=CI)
+abline(v=CI, col="blue",lwd=2)
+legend("topright",legend="Equal Tail", lty=1,col="blue",lwd=2)
 
 
 ```
 
 
-# 3. Bayesian inference
+# 3. Bayesian inference for the concentration parameter in the von Mises distribution.
+
+This exercise is concerned with directional data.The point is to show you that
+the posterior distribution for somewhat weird models can be obtained by plotting it over a grid of values. The data points are observed wind directions at a given location on ten different days. The data are recorded in degrees:
+
+$$(40, 303, 326, 285, 296, 314, 20, 308, 299, 296),$$
+
+where North is located at zero degrees. To fit with Wikipedias description of probability distributions for circular data we convert the data into radians $-\pi \leq y\leq \pi$. The 10 observations in radians are
+$$(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02).$$
+Assume that these data points are independent observations following the von Mises distribution
+$$p(y|\mu,\kappa)= \frac{exp[\kappa \cdot \cos(y-\mu)]}{2\pi I_0(\kappa)}, \pi\leq y\leq\pi,$$
+
+where $I_0(\kappa)$ is the modified Bessel function of the first kind of order zero. The parameter $\mu(\pi \leq y \leq\pi)$ is the mean direction and $\kappa>0$ is called the concentration parameter. Large $\kappa$ gives a small variance around $\mu$, and vice versa. Assume that $\mu$ is known to be 2.39. Let $\kappa \sim Exponential(\lambda = 1)$ a priori, where $\lambda$ is the rate parameter of the exponential distribution (so that the mean is $1/\lambda$).
+
+### (a). Plot the posterior distribution of $\kappa$ for the wind direction data over a fine grid of $\kappa$ values.
+
+To find the Posterior distribution, we need to compute *Posterior$\propto$Likelihood$\cdot$prior*. 
+
+
+*Posterior*
+
+$$p(\mu,\kappa|y) \propto \frac{exp[\kappa\cdot (\Sigma^{n}_{i=1} \cos(y_i-\mu)-1)]}{(2\pi I_0(\kappa))^n}$$
+
+
+```{r echo=F}
+
+## 3.a
+y = c(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02)
+mu = 2.39
+n = length(y)
+
+#kvalues
+k = seq(0,10,0.01)
+
+#posterior distri
+pos = exp(k * (sum(cos(y-mu)) -1)) / (2*pi*besselI(k,0))^n
 
 
 
+```
 
+### (b). Find the (approximate) posterior mode of $\kappa$ from the information in a).
 
+```{r echo=F}
+# 3.b
+cat("The posterior mode of k is:", k[which.max(pos)])
+# 2.12
+
+plot(k,pos, type="l",main="Posterior distribution of k", xlab="k value",ylab="Posterior", lwd=2)
+abline(v=k[which.max(pos)], col="red")
+legend("topright",legend="posterior mode", lty=1,col="red")
+
+```
 
 # Appendix
 
