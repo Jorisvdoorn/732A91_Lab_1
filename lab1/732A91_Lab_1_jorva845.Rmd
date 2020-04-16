@@ -12,7 +12,8 @@ library(tidyverse)
 library(dplyr)
 library(knitr)
 library(LaplacesDemon)
-RNGversion("3.6.2")
+library(bayestestR)
+library(HDInterval)
 set.seed(12345)
 ```
 
@@ -24,37 +25,77 @@ set.seed(12345)
 
 *Draw random numbers from the posterior $\theta|y ~ Beta(\alpha_0 + s, \beta_0 + f), y = (y_1, ..., y_n)$, and verify graphically that the posterior mean and standard deviation converges to the true values as the number of random draws grows large.*
 
-```{r, echo = F}
+The likelihood is given as:
+
+$$y_1, ..., y_n|\theta \sim Bern(\theta) = \theta^s(1-\theta)^{f}$$
+Where s is the number of succes (s = 5) and f = n - s is the number of failures (n = 20; f = 20 - 5 = 15).
+
+We assume a beta prior:
+
+$$Beta(\alpha_0, \beta_0) = \frac{\Gamma(\alpha_0+\beta_0)}{\Gamma(\alpha_0)\Gamma(\beta_0)}\theta^{\alpha_0-1}(1-\theta)^{\beta_0-1}$$
+
+Where $\alpha_0=\beta_0=2$.
+
+We find the posterior using Bayes Theorem:
+
+
+$$p(\theta|y)\propto p(y|\theta)p(\theta)$$
+
+Combining the previous formulas gives the following expression for the posterior: 
+
+$$p(\theta|y)\propto \theta^s(1-\theta)^{f}\theta^{\alpha_0-1}(1-\theta)^{\beta_0-1} = \theta^{s+\alpha_0-1}(1-\theta)^{f+\beta_0-1}$$
+
+Filling in the information we know about s, f, $\alpha_0$ and $\beta_0$, we get: 
+
+$$\theta|y_1, ..., y_20\sim Beta(s+\alpha_0,f+\beta_0)= Beta(7,17)$$
+
+Verification will be done by comparing with the true mean and variance, which for a Beta distribution is given by:
+
+$$\mu = \frac{\alpha}{\alpha+\beta}$$
+$$\sigma^2=\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}$$
+
+```{r, echo=F}
 # ---------------------------------------------------------
 # 1a
-
-a = b = 2
-n = 20
-s = 5
+f = 17
+s = 7
 nDraws = 10000
-#xGrid <- seq(0.001, 0.999, by=0.001)
-#posterior = dbeta(xGrid, a+s, b+(n-s))
 
-means <- c()
-sds <- c()
-
+# Sampler from the posterior
 set.seed(12345)
-
-for(i in 1:nDraws){
-  xGrid <- seq(1/nDraws, i/nDraws, by=1/nDraws)
-  posterior = dbeta(xGrid, a+s, b+(n-s))
-  means[i] <- mean(posterior)
-  sds[i] <- sd(posterior)
-  
-  #at("\nNumber of Draws: ", i , "\nMean: ", mean(posterior), "\nStandard Deviation: ", sd(posterior))
+beta_sampler <- function(nDraws, alpha, beta){
+  draws <- rbeta(nDraws,alpha,beta)
+  return(list('Mean'=mean(draws),'sd'=sd(draws)))
 }
 
-cat("Number of Draws: ", nDraws , "\nPosterior Mean: ", means[nDraws], "\nPosterior Standard Deviation: ", sds[nDraws])
 
-plot(xGrid, means, type = 'l', lwd = 3, col = "red")
-lines(xGrid, sds, lwd = 3, col = "blue")
-legend(x = max(xGrid)*0.70, y = 0.95*max(means), legend = c("Posterior Mean", "Posterior Standard Deviation"), col = c("red", "blue"), lwd = c(3,3), cex = 0.7)
+# Creating lists of mean and std
+means <- c()
+sds <- c()
+for(i in 1:nDraws){
+  means[i] <- beta_sampler(i, s, f)$Mean
+  sds[i] <- beta_sampler(i, s, f)$sd
+}
+
+true_mean = s/(s+f)
+true_sd =  sqrt((s*f) / (((s+f)^2)*(s+f+1)))
+
+cat("Number of Draws: ", nDraws , "\nPosterior Mean: ", means[nDraws], "\nPosterior Standard Deviation: ", sds[nDraws])
+cat("\nTrue Mean: ", true_mean, "\nTrue Standard Deviation: ", true_sd)
+
+xGrid <- 1:nDraws
+
+plot(xGrid, means, type = 'p', lwd = 3, col = "red")
+abline(h=true_mean, col="pink")
+legend(x = max(xGrid)*0.70, y = 0.95*max(means), legend = c("Posterior Mean", "True Mean"), col = c("red", "pink"), lwd = c(3,3), cex = 0.7)
+
+plot(xGrid, sds, type = 'p', lwd = 3, col = "blue")
+abline(h=true_sd, col="purple")
+legend(x = max(xGrid)*0.70, y = 0.15, legend = c("Posterior Standard Deviation","True Standard Deviation"), col = c("blue","purple"), lwd = c(3,3), cex = 0.7)
 ```
+
+
+
 
 ## b. 
 
@@ -63,36 +104,28 @@ legend(x = max(xGrid)*0.70, y = 0.95*max(means), legend = c("Posterior Mean", "P
 ```{r, echo = F}
 # ---------------------------------------------------------
 # 1b
+set.seed(12345)
+posterior_sample <- rbeta(nDraws, s, f)
 
-xGrid <- seq(1/nDraws, nDraws/nDraws, by=1/nDraws)
-posterior = pbeta(xGrid, a+s, b+(n-s)) # Ask for the difference between pbeta & dbeta
-
-prob_03 <- posterior[posterior > 0.3]
+prob_03 <- posterior_sample[posterior_sample > 0.3]
 prob <- length(prob_03)/nDraws
 
-cat("The probability of theta being larger than 0.3 is: ", prob)
+true_prob <- pbeta(q=0.3, s, f, lower.tail = FALSE)
+
+cat("\nThe probability of theta being larger than 0.3 is: ", prob)
+cat("\nThe true probability of theta being larger than 0.3 is: ", true_prob)
 ```
 
 ## c. 
 
-*Compute the posterior distribution of the log-odds $\phi$*
+*Compute the posterior distribution of the log-odds $\phi = log(\frac{\theta}{1-\theta})$ by simulation (nDraws = 10000).*
 
 ```{r, echo=F}
 # ---------------------------------------------------------
 # 1c
-
-xGrid <- seq(1/nDraws, nDraws/nDraws, by=1/nDraws)
-posterior = dbeta(xGrid, a+s, b+(n-s))
-
-logodds <- c()
-
-for(i in 1:length(posterior)){
-  logodds[i] <- log(abs(posterior[i]/(1-posterior[i])))
-}
-
-hist(logodds, breaks = 100)
-plot(1:10000,logodds)
-density(logodds)
+log_odds <- log(posterior_sample/(1-posterior_sample))
+hist(log_odds, freq = F, main="log-odds distribution", xlab="",col="grey")
+lines(density(log_odds), col="red", lwd=2)
 ```
 
 \newpage
@@ -117,31 +150,25 @@ We worked with the log of the data, assuming that is approximately normally dist
 # 2a
 y <- c(44,25,45,52,30,63,19,50,34,67)
 n <- length(y)
-logy <- log(y)
 nDraws <- 10000
 mu <- 3.7
 
-# Code based on Mattias Villani's NormalNonInfoPrior.R, found on https://github.com/STIMALiU/BayesLearnCourse/blob/master/Code/NormalNonInfoPrior.R~
-LogNormalNonInfoPrior <- function(nDraws, data, mu){
-  datamean <- mean(data)
-  n <- length(data)
-  tau2 <- sum((data-mu)^2) / n
-  PostDraws <- matrix(0,nDraws,2)
-  PostDraws[,1] <- ((n-1)*tau2)/rchisq(nDraws,n-1)
-  PostDraws[,2] <- datamean+rnorm(nDraws,0,1)*sqrt(PostDraws[,1]/n)
-  return(PostDraws)
+tau2 <- sum((log(y)-mu)^2) / n
+
+set.seed(12345)
+sigma2 <- c()
+for(i in 1:nDraws){
+  sample <- rchisq(n=1, df=n)
+  sigma2[i] <- (tau2*n)/sample
 }
 
-#tau2 <- sum((logy-mu)^2) / n
-tau2<-rinvchisq(nDraws, n-1, scale=1/(n-1))
+true_tau2 <- rinvchisq(nDraws, n, tau2)
 
-PostDraws<-LogNormalNonInfoPrior(10000,logy, mu) 
+hist(sigma2,breaks=25,xlim=c(0,2.5),ylim=c(0,6000),col="red")
+legend(x = 0.5, y = 1500, legend = "Sigma Squared", col = "red", lwd = c(3,3), cex = 0.7)
 
-p1<-hist(PostDraws[,1], breaks = 50, col = "red") 			# Plotting the histogram of mu-draws
-p2<-hist(tau2, breaks = 50, col = "blue")
-plot(p1, col=rgb(0,0,1,1/4), ylim = c(0,3500), xlim = c(0,0.90))
-plot(p2, col=rgb(1,0,1,1/4), add=T)
-legend(x = 0.5, y = 3000, legend = c("Posterior Draws", "Tau Squared"), col = c(rgb(0,0,1,1/4), col=rgb(1,0,1,1/4)), lwd = c(3,3), cex = 0.7)
+hist(true_tau2,breaks=25,xlim=c(0,2.5),ylim=c(0,6000),col="blue")
+legend(x = 0.5, y = 1500, legend = "Tau Squared", col = "blue", lwd = c(3,3), cex = 0.7)
 ```
 
 ## b. 
@@ -151,7 +178,70 @@ legend(x = 0.5, y = 3000, legend = c("Posterior Draws", "Tau Squared"), col = c(
 ```{r, echo=F}
 # ---------------------------------------------------------
 # 2b
+# Calculating gini coefficient G
+G <- 2*pnorm(sqrt(sigma2/2))-1
 
+hist(G,breaks=25,xlim=c(0,1),ylim=c(0,2000),col="grey",main="Distribution of the Gini Coefficient")
+```
+
+## c.
+
+*Use the posterior draws from b) to compute a 90% equal tail credible interval for G. A 90% equal tail interval (a, b) cuts off 5% percent of the posterior probability mass to the left of a, and 5% to the right of b. Also, do a kernel density estimate of the posterior of G using the density function in R with default settings, and use that kernel density estimate to compute a 90% Highest Posterior Density interval for G. Compare the two intervals.*
+
+```{r, echo=F}
+# ---------------------------------------------------------
+# 2c
+et_cred_int <- ci(G, ci = 0.90, method = "ETI")
+cat("The equal-tail credible interval for the Gini coefficient is: [", et_cred_int$CI_low, ", ", et_cred_int$CI_high, "]")
+
+kernel_density <- density(G)
+HDI <- hdi(kernel_density$x, credMass = 0.90)
+
+hdi_low <- as.numeric(HDI["CI_low"])
+hdi_high <- as.numeric(HDI["CI_high"])
+
+cat("\nThe Highest Posterior Density interval for the Gini coefficient is: [", et_cred_int$CI_low, ", ", et_cred_int$CI_high, "]")
+
+plot(kernel_density$x, kernel_density$y)
+abline(v=c(hdi_low,hdi_high, et_cred_int$CI_low, et_cred_int$CI_high), col=c("blue", "blue", "red", "red"))
+legend(x = 0.5, y = 4, legend = c("Equal-tail CI", "HDI"), col = c("red","blue"), lwd = c(3,3), cex = 0.7)
+```
+
+We estimated both the equal tail credible interval and the Highest Posterior Density interval (HPD) for G. As can be seen from the plot, the HPD is much wider than the equal tail credible interval. This interval is likely much wider because it contains the $\theta$ values with the highest pdf, whereas the equal tail CI exactly cuts off 5% on each side.
+
+\newpage
+
+# 3. Bayesian inference for the concentration parameter in the von Mises distribution.
+
+*This exercise is concerned with directional data. The point is to show you that the posterior distribution for somewhat weird models can be obtained by plotting it over a grid of values. The data points are observed wind directions at a given location on ten different days. The data are recorded in degrees: (40, 303, 326, 285, 296, 314, 20, 308, 299, 296), where North is located at zero degrees (see Figure 1 on the next page, where the angles are measured clockwise). To fit with Wikipedias description of probability distributions for circular data we convert the data into radians $-\pi \leq y \leq \pi$ The 10 observations in radians are: (-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02). Assume that these data points are independent observations following the von Mises distribution: *
+
+$$p(y|\mu,\kappa)=\frac{e^{\kappa*cos(y-\mu)}}{2\pi I_0(\kappa)}, -\pi\leq y \leq \pi$$
+
+*where $I_0(\kappa)$ is the modified Bessel function of the first kind of order zero. The parameter $\mu (-\pi\leq y \leq \pi)$ is the mean direction and $\kappa > 0$ is called the concentration parameter. Large $\kappa$ gives a small variance around $\mu$, and vice versa. Assume that $\mu$ is known to be 2.39. Let $\kappa \sim Exponential(\lambda = 1)$ a priori, where $\lambda$ is the rate parameter of the exponential distribution (so that the mean is $1/\lambda$.*
+
+## a. 
+
+*Plot the posterior distribution of $\kappa$ for the wind direction data over a fine grid of $\kappa$ values.*
+
+Again, using Bayes Theorem we find: 
+
+$$p(\mu,\kappa|y) \propto \frac{exp[\kappa\cdot (\Sigma^{n}_{i=1} \cos(y_i-\mu)-1)]}{(2\pi I_0(\kappa))^n}$$
+
+```{r,echo=F}
+y <- c(-2.44, 2.14, 2.54, 1.83, 2.02, 2.33, -2.79, 2.23, 2.07, 2.02)
+n <- length(y)
+mu <- 2.39
+kGrid <- seq(0,10,0.01)
+posterior <- exp(kGrid*(sum(cos(y-mu))-1))/((2*pi*besselI(kGrid,0))^n)
+
+plot(kGrid,posterior, type="l",main="Posterior distribution of k", xlab="k-value",ylab="Posterior", lwd=2)
+abline(v=kGrid[which.max(posterior)], col="red")
+legend("topright",legend="posterior mode", lty=1,col="red")
+
+```
+
+```{r,echo=F}
+cat("The posterior mode of k is at: ", kGrid[which.max(posterior)], "\nWith value: ", max(posterior))
 ```
 
 \newpage
