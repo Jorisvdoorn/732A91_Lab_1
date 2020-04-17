@@ -197,13 +197,14 @@ cat("The equal-tail credible interval for the Gini coefficient is: [", et_cred_i
 kernel_density <- density(G)
 HDI <- hdi(kernel_density$x, credMass = 0.90)
 
-hdi_low <- as.numeric(HDI["CI_low"])
-hdi_high <- as.numeric(HDI["CI_high"])
+hdi_low <- as.numeric(HDI[1])
+hdi_high <- as.numeric(HDI[2])
 
-cat("\nThe Highest Posterior Density interval for the Gini coefficient is: [", et_cred_int$CI_low, ", ", et_cred_int$CI_high, "]")
+cat("\nThe Highest Posterior Density interval for the Gini coefficient is: [", hdi_low, ", ", hdi_high, "]")
 
-plot(kernel_density$x, kernel_density$y)
-abline(v=c(hdi_low,hdi_high, et_cred_int$CI_low, et_cred_int$CI_high), col=c("blue", "blue", "red", "red"))
+plot(kernel_density$y~kernel_density$x)
+abline(v=c(hdi_low,hdi_high), col=c("blue","blue"))
+abline(v=c(et_cred_int$CI_low, et_cred_int$CI_high), col=c("red", "red"))
 legend(x = 0.5, y = 4, legend = c("Equal-tail CI", "HDI"), col = c("red","blue"), lwd = c(3,3), cex = 0.7)
 ```
 
