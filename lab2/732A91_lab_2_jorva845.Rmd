@@ -1,0 +1,45 @@
+---
+title: "732A91 - Lab 2"
+author: "Joris van Doorn || Weng Hang Wong"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height = 4.1) 
+library(tidyverse)
+library(dplyr)
+library(knitr)
+set.seed(12345)
+```
+
+# 1. Linear and polynomial regression
+
+*The dataset TempLinkoping.txt contains daily average temperatures (in Celcius degrees) at Malmslätt, Linköping over the course of the year 2018. The response variable is temp and the covariate is*
+
+$$time = \frac{the\: number\: of\: days\: since\: beginning\: of\: year}{365}$$
+
+*The task is to perform a Bayesian analysis of a quadratic regression*
+
+$$temp=\beta_0+\beta_1*time+\beta_2*time^2+\epsilon,\epsilon\sim^{iid}N(0,\sigma^2)$$
+
+## a. 
+
+*Determining the prior distribution of the model parameters. Use the conjugate prior for the linear regression model. Your task is to set the prior hyperparameters $\mu_0, \Omega_0, \nu_0 \:and\:\sigma_0^2$ to sensible values. Start with $\mu_0=(-10,100,-100)^T,\Omega_0=0.01\cdot I_3,\nu_0=4\:and\:\sigma_0^2$. Check if this prior agrees with your prior opinions by simulating draws from the joint prior of all parameters and for every draw compute the regression curve. This gives a collection of regression curves, one for each draw from the prior. Do the collection of curves look reasonable? If not, change the prior hyperparameters until the collection of prior regression curves agrees with your prior beliefs about the regression curve.*
+
+```{r,echo=F}
+data0 <- read.table("TempLinkoping.txt", header = TRUE)
+intercept <- rep(1,365)
+data1 <- cbind(data0, "intercept"=intercept)
+time2 <- apply(data1$time, MARGIN = 1, FUN=a*a)
+data1 <- cbind(data1, "time2"=time2)
+```
+
+
+\newpage
+
+# Appendix
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE,results='show'}
+```
