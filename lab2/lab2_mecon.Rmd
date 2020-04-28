@@ -164,8 +164,143 @@ In order to avoid overfitting on a higher order model, we can use the prior:
 $$ \beta_i|\sigma^2 \sim N(0, \frac{\sigma^2}{\lambda})$$
 A larger $\lambda$ here gives the smoother fitting curves on the model. 
 
+# 2. Posterior approximation for classification with logistic regression
+
+### (a)
+
+```{r echo=F}
+# 2.a
+
+## find the value of beta tilde and J()
+data = read.table("WomenWork.dat", header =T)
+
+#make y as vector and X as matrix
+y=data[,1]
+X=as.matrix(data[,2:9])
+colnames(X) = names(data)[2:9]
+nPara = dim(X)[2]
+
+tau=10
+# prior's hyperpara
+mu <- as.vector(rep(0,nPara)) 
+sigma <- tau^2*diag(nPara)
+
+# A function that returns regression coeifficient
+## calculate the Log(post) = log(llh)+log(prior)
+
+set.seed(12345)
+LogPost = function(betaVec, y, X, mu, sigma){
+  pred = X%*%betaVec
+  #log LLH
+  logLLH= sum(y*pred - log(1+exp(pred)) )
+  #log prior using dmvnorm from beta vector
+  logPrior = dmvnorm(betaVec, mean=rep(0,length(betaVec)), sigma, log=T)
+  res = logLLH + logPrior
+  return(res)
+}
+
+initValue <- as.vector(rep(0,dim(X)[2])); 
+# Or a random starting vector: as.vector(rnorm(dim(X)[2]))
+# Set as OLS estimate: as.vector(solve(crossprod(X,X))%*%t(X)%*%y); # Initial values by OLS
+
+#All arguments except betaVecc which is the one that we are trying to optimize over
+# The argument control is a list of options to the optimizer. Here I am telling the optimizer to multiply the objective function (i.e. logPost) by -1. This is because
+# Optim finds a minimum, and I want to find a maximum. By reversing the sign of logPost I can use Optim for my maximization problem.
+OptimResults<-optim(initValue,LogPost,gr=NULL,y,X,mu,sigma,method=c("BFGS"),control=list(fnscale=-1),hessian=TRUE)
+
+## find the value of Beta and Hessian
+PostModeBeta = OptimResults$par
+hessianBeta = -solve(OptimResults$hessian) #we want -Inv Hessian
+approx_PostStd <- as.matrix(sqrt(diag(hessianBeta)))
+
+# Beta table
+library(knitr)
+kable( data.frame(Beta = seq(0,7,1), Posterior_mode=PostModeBeta))
+
+#Covariance Matrix
+colnames(hessianBeta) = names(data)[2:9]
+rownames(hessianBeta) =  names(data)[2:9]
+kable(hessianBeta)
+
+# Hessian table
+rownames(approx_PostStd) = names(data)[2:9]
+colnames(approx_PostStd) = "Hessian Value"
+kable(approx_PostStd)
+
+## verify my result
+glmModel <- glm(Work~0+., data = data, family = binomial)
+
+kable(data.frame(Beta = seq(0,7,1),Verified_mode = glmModel$coefficients))
+
+```
 
 
+
+
+```{r echo=F}
+
+## find the CI for NSmallChild by simulating from the Post
+set.seed(12345)
+Post_logis_beta = rmvnorm(n=1000, mean=PostModeBeta, sigma = hessianBeta)
+
+NsmallChild=Post_logis_beta[,7]
+hist(NsmallChild, main="Simulated Posterior of beta (NSmallChild)", breaks=30)
+
+CI = quantile(NsmallChild, c(0.025, 0.975))
+
+abline(v=CI[1], col="red", lwd=2)
+abline(v=CI[2], col="red", lwd=2)
+legend("topright", legend = "Interval", col="red", lwd=2)
+
+cat("The Credible Interval is:", CI)
+
+
+```
+
+
+
+
+### (b)
+
+```{r echo=F}
+
+## 2.b
+
+library(mvtnorm)
+
+X =  c(
+  constant=1,
+  husbandIC=10,
+  educYear=8,
+  expYear=10,
+  expYear2=1,
+  age=40,
+  NSmallChile=1,
+  NBigChild=1
+
+  )
+Post_logis_beta = rmvnorm(n=1000, mean=PostModeBeta, sigma = hessianBeta)
+
+gen_post = function(beta, X){
+    y1 = (exp((X)%*%beta)) / ( 1+exp((X)%*%beta) )
+    return(y1)
+}
+
+gen_pred = apply(Post_logis_beta,1,gen_post,X)
+
+hist(gen_pred,freq = F, breaks=30)
+
+
+```
+
+### (c)
+```{r echo=F}
+
+
+
+
+
+```
 
 # Appendix
 
