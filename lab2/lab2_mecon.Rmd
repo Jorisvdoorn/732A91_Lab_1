@@ -15,26 +15,24 @@ The task is to perform a Bayesian analysis of a quadratic regression $$ temp=\be
 $$ \beta|\sigma^2 \sim N(\mu_0, \sigma^2\Omega_0^{-1})$$
 $$\sigma^2 \sim Inv -\chi^2 (v_0, \sigma_0^2)$$
 
-First, we start with $\mu_0 = (-10, 100,-100)^T$, $\Omega_0=0.01 \cdot I_3$ , $v_0=4$ and $\sigma_0^2=1$.
+By simulating 100 draws, the red curves of the first figure is the regression curves simulating from the give hyperparameters $\mu_0 = (-10, 100,-100)^T$, $\Omega_0=0.01 \cdot I_3$ , $v_0=4$ and $\sigma_0^2=1$. The curves are messed in the graph and basically can't explain the data. 
 
-In 100 draws, we 
+So, first we set the hyperparaters $\sigma_0^2=0.03$, it has obvious changing with lower value of of $\sigma_0^2$. From the second figure below, the regression curves are more concentrated to the data. 
 
-
+Second, the change of $\mu_0=(-10,110,-105)^T$ and $\sigma_0^2=0.03$ lead the curves fit better to the data with our prior beliefs in the third figure below.
 
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 #~1.a
 library(mvtnorm)
 data = read.table("~/Desktop/Bayesian/732A91_Lab_1/lab2/TempLinkoping.txt",header=T)
 
-#hyperparameters
+#given hyperparameters
 mu0=matrix(c(-10,100,-100))
 omega0=diag(x=0.01, nrow=3, ncol=3)
 v0=4
 sigma20=1
 
-
 #prior
-
 PriorReg = function(mu0,omega0,v0,sigma20){
   set.seed(12345)
   for(i in 1:100){
@@ -55,16 +53,21 @@ PriorReg = function(mu0,omega0,v0,sigma20){
 plot(data, main="Predicted Temperature with given hyperparameters", ylab="Temperature", xlab="Time", type="l")
 PriorReg( mu0, omega0, v0, sigma20)
 
-
-# Change the hyperpara
-plot(data, main="Predicted Temperature with changed hyperparameters", ylab="Temperature", xlab="Time", type="l")
+### change the hyperpara nu
+plot(data, main="Predicted Temperature with given hyperparameters", ylab="Temperature", xlab="Time", type="l")
 PriorReg( mu0, omega0, v0, sigma20=0.03)
+
+
+# Change the hyperpara sigma
+plot(data, main="Predicted Temperature with changed hyperparameters", ylab="Temperature", xlab="Time", type="l")
+PriorReg( mu0=matrix(c(-10,110,-105)), omega0, v0, sigma20=0.03)
 
 
 ```
 
 ### (b)Write a program that simulates from the joint posterior distribution of $\beta_0$,$\beta_1$,$\beta_2$,and $\sigma^2$. Plot the marginal posteriors for each parameter as a histogram. Also produce another figure with a scatter plot of the temperature data and overlay a curve for the posterior median of the regression function $f(time)=\beta_0 +\beta_1 \cdot time+\beta_2\cdot time^2$, computed for every value of time. Also overlay curves for the lower 2.5% and upper 97.5% posterior credible interval for f (time). That is, compute the 95% equal tail posterior probability intervals for every value of time and then connect the lower and upper limits of the interval by curves. Does the interval bands contain most of the data points? Should they?
 
+From the graph below, the parameters are simulated from the joint posterior distribution. The marginal posteriors for each parameter $\beta_0$,$\beta_1$,$\beta_2$,and $\sigma^2$ are shown below.
 
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 #1.b
@@ -101,11 +104,15 @@ for(i in 1:1000){
 colnames(final) = c("beta0","beta1","beta2","sigma2")
 
 ## histogram of each parameters
-hist(final[,1], freq=F,main="beta 0", xlab="Beta value", breaks=30)
-hist(final[,2],freq=F, main="beta 1", xlab="Beta value", breaks=30)
-hist(final[,3], freq=F,main="beta 2", xlab="Beta value", breaks=30)
-hist(final[,4], freq=F,main="Sigma^2",xlab="Sigma^2 value", breaks=30)
+hist(final[,1], main="beta 0", xlab="Beta value", breaks=30)
+hist(final[,2], main="beta 1", xlab="Beta value", breaks=30)
+hist(final[,3], main="beta 2", xlab="Beta value", breaks=30)
+hist(final[,4], main="Sigma^2",xlab="Sigma^2 value", breaks=30)
+```
 
+Here is a scateer plot of the temperature data with the median and credible interval curves. However, most of the data points are not contained in the 95% posterior credible interval, they should not contained most of the data points, since it didn't include the $\varepsilon$ in the regression function and the uncentainty parameter here has particular probability. 
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 ### median curve and intervals
 post_beta = final[,1:3]
 
@@ -140,7 +147,7 @@ $$ y= \beta_0+\beta_1\cdot x + \beta_2 \cdot x^2$$
 $$0 = \beta_1 + 2\beta_2x$$
 $$ \widetilde{x} = \frac{-\beta_1}{2\beta_2}$$
 
-```{r}
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 ##1.c
 
 x_tilde = -post_beta[,2]/ (2*post_beta[,3])
@@ -152,6 +159,12 @@ hist(x_tilde, freq=F, breaks=20)
 
 
 ### (d) Say now that you want to estimate a polynomial model of order 7, but you suspect that higher order terms may not be needed, and you worry about over-fitting. Suggest a suitable prior that mitigates this potential problem. You do not need to compute the posterior, just write down your prior.
+
+In order to avoid overfitting on a higher order model, we can use the prior:
+$$ \beta_i|\sigma^2 \sim N(0, \frac{\sigma^2}{\lambda})$$
+A larger $\lambda$ here gives the smoother fitting curves on the model. 
+
+
 
 
 # Appendix
