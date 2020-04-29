@@ -32,9 +32,52 @@ $$temp=\beta_0+\beta_1*time+\beta_2*time^2+\epsilon,\epsilon\sim^{iid}N(0,\sigma
 data0 <- read.table("TempLinkoping.txt", header = TRUE)
 intercept <- rep(1,365)
 data1 <- cbind(data0, "intercept"=intercept)
-time2 <- apply(data1$time, MARGIN = 1, FUN=a*a)
+time2 <- data1$time^2
 data1 <- cbind(data1, "time2"=time2)
 ```
+
+## d.
+
+To prevent overfitting we suggest adding a regularization term. The proposed prio would like as follows:
+
+$$\beta_i|\sigma^2\sim^{iid}N(0,\frac{\sigma^2}{\lambda})$$
+
+where $\lambda$ will be the smoothness/shrinkage/regularization term.
+
+\newpage
+
+# 2. Posterior approximation for cassification with logistic regression
+
+*The dataset WomenWork.dat contains n = 200 observations (i.e. women) on the following nine variables:*
+
+\begin{table}[]
+\begin{tabular}{l|l|l|l}
+Variable    & Data type & Meaning                                           & Role     \\ \hline
+Work        & Binary    & Whether or not the woman works                    & Response \\
+Constant    & 1         & Constant to the intercept                         & Feature  \\
+HusbandInc  & Numeric   & Husband's income                                  & Feature  \\
+EducYears   & Counts    & Years of education                                & Feature  \\
+ExpYears    & Counts    & Years of experience                               & Feature  \\
+ExpYears2   & Numeric   & (Years of experience)/10)\textasciicircum{}2      & Feature  \\
+Age         & Counts    & Age                                               & Feature  \\
+NSmallChild & Counts    & Number of child \textless 7 years in household    & Feature  \\
+NBigChild   & Counts    & Number of child \textgreater 6 years in household & Feature 
+\end{tabular}
+\end{table}
+
+## a. 
+
+*Consider the logistic regression*
+
+$$Pr(y=1|x)=\frac{e^{x^T\beta}}{1+e^{x^T\beta}}$$
+
+*where y is the binary variable with y = 1 if the woman works and y = 0 if she does not. x is a 8-dimensional vector containing the eight features (including a one for the constant term that models the intercept).*
+*The goal is to approximate the posterior distribution of the 8-dim parameter vector $\beta$ with a multivariate normal distribution*
+
+$$\beta|y,X\sim N(\hat\beta,J_y^{-1}(\hat\beta))$$
+
+*where $\hat\beta$ is the posterior mode and $J(\hat\beta)=-\frac{\delta^2lnp(\beta|y)}{\delta\beta\delta\beta^T}|_{\beta=\hat\beta}$ is the observed Hesian evaluated at the posterior mode. Note that $J(\hat\beta)$ is an 8x8 matrix with second derivatives on the diagonal and cross-derivatives $\frac{\delta^2lnp(\beta|y)}{\delta\beta_i\delta\beta_^T_j}$ on the offdiagonal. It is actually not hard to compute this derivative by hand, but don't worry, we will let the computer do it numerically for you. Now, both $\hat\beta$ and $J(\hat\beta)$ are computed by the optim function in R. I want you to implement you own version of this. You can use my code as a template, but I want you to write your own file so that you understand every line of your code. Don’t just copy my code. Use the prior $\beta\sim N(0,\tau^2I)$, with $\tau=10$. Your report should include your code as well as numerical values for $\hat\beta$ and $J(\hat\beta)$ for the WomenWork data. Compute an approximate 95% credible interval for the variable NSmallChild. Would you say that this feature is an important determinant of the probability that a women works? [Hint: To verify that your results are reasonable, you can compare to you get by estimating the parameters using maximum likelihood: glmModel <- glm(Work ~ 0 + ., data = WomenWork, family = binomial).] *
+
 
 
 \newpage
