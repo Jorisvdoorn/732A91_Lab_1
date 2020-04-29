@@ -11,6 +11,7 @@ knitr::opts_chunk$set(fig.width=9, fig.height = 4.1)
 library(tidyverse)
 library(dplyr)
 library(knitr)
+library(mvtnorm)
 set.seed(12345)
 ```
 
@@ -28,17 +29,150 @@ $$temp=\beta_0+\beta_1*time+\beta_2*time^2+\epsilon,\epsilon\sim^{iid}N(0,\sigma
 
 *Determining the prior distribution of the model parameters. Use the conjugate prior for the linear regression model. Your task is to set the prior hyperparameters $\mu_0, \Omega_0, \nu_0 \:and\:\sigma_0^2$ to sensible values. Start with $\mu_0=(-10,100,-100)^T,\Omega_0=0.01\cdot I_3,\nu_0=4\:and\:\sigma_0^2$. Check if this prior agrees with your prior opinions by simulating draws from the joint prior of all parameters and for every draw compute the regression curve. This gives a collection of regression curves, one for each draw from the prior. Do the collection of curves look reasonable? If not, change the prior hyperparameters until the collection of prior regression curves agrees with your prior beliefs about the regression curve.*
 
-```{r,echo=F}
+```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#-----------------------------------------------------------------------------
+# Q1a.
 data0 <- read.table("TempLinkoping.txt", header = TRUE)
 intercept <- rep(1,365)
 data1 <- cbind(data0, "intercept"=intercept)
 time2 <- data1$time^2
 data1 <- cbind(data1, "time2"=time2)
+
+#given hyperparameters
+mu0=matrix(c(-10,100,-100))
+omega0=diag(x=0.01, nrow=3, ncol=3)
+v0=4
+sigma20=1
+
+#prior
+PriorReg = function(mu0,omega0,v0,sigma20){
+  set.seed(12345)
+  for(i in 1:100){
+    #using chi_sq to sample sigma^2
+    chi_sample = rchisq(n=1, df=v0)
+    sigma2 = v0*sigma20/chi_sample
+    
+    #using mvtnorm sample beta
+    beta = rmvnorm(n=1, mean=mu0, sigma=sigma20*solve(omega0))
+    
+    #quadratic regression  
+    quad_regre= beta[1]+beta[2]*data0$time+beta[3]*(data0$time^2)+rnorm(1,mean=0, sd=sqrt(sigma2))
+    lines(x=data0$time, y=quad_regre,col="red",lwd=2)
+  }
+}
+
+### Check the given hyperpara
+plot(data0, main="Predicted Temperature with given hyperparameters", ylab="Temperature", xlab="Time", type="l")
+PriorReg( mu0, omega0, v0, sigma20)
+
+### change the hyperpara nu
+plot(data0, main="Predicted Temperature with given hyperparameters", ylab="Temperature", xlab="Time", type="l")
+PriorReg( mu0, omega0, v0, sigma20=0.03)
+
+
+# Change the hyperpara sigma
+plot(data0, main="Predicted Temperature with changed hyperparameters", ylab="Temperature", xlab="Time", type="l")
+PriorReg( mu0=matrix(c(-10,110,-105)), omega0, v0, sigma20=0.03)
+```
+
+## b. 
+
+*Write a program that simulates from the joint posterior distribution of $\beta_0$,$\beta_1$,$\beta_2$,and $\sigma^2$. Plot the marginal posteriors for each parameter as a histogram. Also produce another figure with a scatter plot of the temperature data and overlay a curve for the posterior median of the regression function $f(time)=\beta_0 +\beta_1 \cdot time+\beta_2\cdot time^2$, computed for every value of time. Also overlay curves for the lower 2.5% and upper 97.5% posterior credible interval for f (time). That is, compute the 95% equal tail posterior probability intervals for every value of time and then connect the lower and upper limits of the interval by curves. Does the interval bands contain most of the data points? Should they?*
+
+From the graph below, the parameters are simulated from the joint posterior distribution. The marginal posteriors for each parameter $\beta_0$,$\beta_1$,$\beta_2$,and $\sigma^2$ are shown below.
+
+```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#---------------------------------------------
+#Q1b.
+
+### find beta hat
+n=dim(data0)[1]
+X = data.frame(intercept=rep(1,n), x1=data0$time, x2=data0$time^2)
+X = as.matrix(X)
+y = data0$temp
+betaHat = solve(t(X)%*%X)%*%t(X)%*%y
+
+### calculate mu, omega, nu sigma
+mu_n = solve(t(X)%*%X+omega0) %*% (t(X)%*%X%*%betaHat+omega0%*%mu0)
+omega_n = t(X)%*%X+omega0
+v_n = v0 + n
+sigma2_n = (v0*sigma20+(t(y)%*%y+t(mu0)%*%omega0%*%mu0-t(mu_n)%*%omega_n%*%mu_n))/v_n
+
+### Marginal posterior 
+set.seed(12345)
+paras = NULL
+final = NULL
+for(i in 1:1000){
+  #using chi_sq to sample posterior sigma^2
+  chi_sample = rchisq(n=1, df=v_n)
+  post_sigma2 = v_n*sigma2_n/chi_sample
+  
+  #using mvtnorm sample posterior beta
+  post_beta = rmvnorm(n=1, mean=mu_n, sigma=post_sigma2[1]*solve(omega_n))
+  
+  paras = cbind(post_beta,post_sigma2)
+  final = rbind(paras, final)
+}
+
+colnames(final) = c("beta0","beta1","beta2","sigma2")
+
+## histogram of each parameters
+hist(final[,1], main="beta 0", xlab="Beta value", breaks=30)
+hist(final[,2], main="beta 1", xlab="Beta value", breaks=30)
+hist(final[,3], main="beta 2", xlab="Beta value", breaks=30)
+hist(final[,4], main="Sigma^2",xlab="Sigma^2 value", breaks=30)
+```
+Here is a scatter plot of the temperature data with the median and credible interval curves. However, most of the data points are not contained in the 95% posterior credible interval, they should not contained most of the data points, since it didn't include the $\varepsilon$ in the regression function and the uncentainty parameter here has particular probability.
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+### median curve and intervals
+post_beta = final[,1:3]
+
+PredictedVal=matrix(0,nrow=n,ncol=nrow(post_beta))
+for(i in 1:nrow(post_beta)){
+  PredictedVal[,i] = X %*% post_beta[i,]
+}
+
+## find median and credible interval
+medianInterval=c()
+crediInterval = matrix(0,nrow=n,ncol=2)
+for(i in 1:n){
+  medianInterval[i] = median(PredictedVal[i,])
+  crediInterval[i,] = quantile(PredictedVal[i,], c(0.025,0.975))
+
+}
+
+plot(data0, main="Predicted Interval Curves", col="darkgrey", ylab="temperature")
+lines(data0$time,medianInterval, col="pink",lwd=2)
+lines(data0$time,crediInterval[,1], col="blue",lwd=2)
+lines(data0$time,crediInterval[,2], col="blue",lwd=2)
+legend("bottomright",legend=c("Median", "Credible Interval"), col=c("pink","blue"),lwd=2 )
+
+```
+
+## c.
+
+*It is of interest to locate the time with the highest expected temperature (that is, the time where f (time) is maximal). Let’s call this value $\widetilde{x}$ Use the simulations in b) to simulate from the posterior distribution of $\widetilde{x}$*
+
+The first derivative of f(time) will be maximal when it equal to zero.
+$$ y= \beta_0+\beta_1\cdot x + \beta_2 \cdot x^2$$
+$$0 = \beta_1 + 2\beta_2x$$
+$$ \widetilde{x} = \frac{-\beta_1}{2\beta_2}$$
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#--------------------------------------------------------------
+#Q1c.
+
+x_tilde = -post_beta[,2]/ (2*post_beta[,3])
+cat("The expected highest expected temperature is",mean(x_tilde))
+
+hist(x_tilde, freq=F, breaks=20)
+
 ```
 
 ## d.
 
-To prevent overfitting we suggest adding a regularization term. The proposed prio would like as follows:
+To prevent overfitting we suggest adding a regularization term. The proposed prior would like as follows:
 
 $$\beta_i|\sigma^2\sim^{iid}N(0,\frac{\sigma^2}{\lambda})$$
 
@@ -69,16 +203,124 @@ NBigChild   & Counts    & Number of child \textgreater 6 years in household & Fe
 
 *Consider the logistic regression*
 
-$$Pr(y=1|x)=\frac{e^{x^T\beta}}{1+e^{x^T\beta}}$$
+$$Pr(y=1|x)=\frac{e^{x^{T}\beta}}{1+e^{x^{T}\beta}}$$
 
 *where y is the binary variable with y = 1 if the woman works and y = 0 if she does not. x is a 8-dimensional vector containing the eight features (including a one for the constant term that models the intercept).*
 *The goal is to approximate the posterior distribution of the 8-dim parameter vector $\beta$ with a multivariate normal distribution*
 
 $$\beta|y,X\sim N(\hat\beta,J_y^{-1}(\hat\beta))$$
 
-*where $\hat\beta$ is the posterior mode and $J(\hat\beta)=-\frac{\delta^2lnp(\beta|y)}{\delta\beta\delta\beta^T}|_{\beta=\hat\beta}$ is the observed Hesian evaluated at the posterior mode. Note that $J(\hat\beta)$ is an 8x8 matrix with second derivatives on the diagonal and cross-derivatives $\frac{\delta^2lnp(\beta|y)}{\delta\beta_i\delta\beta_^T_j}$ on the offdiagonal. It is actually not hard to compute this derivative by hand, but don't worry, we will let the computer do it numerically for you. Now, both $\hat\beta$ and $J(\hat\beta)$ are computed by the optim function in R. I want you to implement you own version of this. You can use my code as a template, but I want you to write your own file so that you understand every line of your code. Don’t just copy my code. Use the prior $\beta\sim N(0,\tau^2I)$, with $\tau=10$. Your report should include your code as well as numerical values for $\hat\beta$ and $J(\hat\beta)$ for the WomenWork data. Compute an approximate 95% credible interval for the variable NSmallChild. Would you say that this feature is an important determinant of the probability that a women works? [Hint: To verify that your results are reasonable, you can compare to you get by estimating the parameters using maximum likelihood: glmModel <- glm(Work ~ 0 + ., data = WomenWork, family = binomial).] *
+*where $\hat\beta$ is the posterior mode and $J({\hat\beta}) = - \frac{\delta^2lnp(\beta|y)}{\delta\beta\delta\beta^{T}} |_{\beta={\hat\beta}}$ is the observed Hesian evaluated at the posterior mode. Note that $J(\hat\beta)$ is an 8x8 matrix with second derivatives on the diagonal and cross-derivatives $\frac{\delta^2lnp(\beta|y)}{\delta\beta_i\delta\beta_j}$ on the offdiagonal. It is actually not hard to compute this derivative by hand, but don't worry, we will let the computer do it numerically for you. Now, both $\hat\beta$ and $J(\hat\beta)$ are computed by the optim function in R. I want you to implement you own version of this. You can use my code as a template, but I want you to write your own file so that you understand every line of your code. Don’t just copy my code. Use the prior $\beta\sim N(0,\tau^2I)$, with $\tau=10$. Your report should include your code as well as numerical values for $\hat\beta$ and $J(\hat\beta)$ for the WomenWork data.*
 
+\newpage
 
+*Compute an approximate 95% credible interval for the variable NSmallChild. Would you say that this feature is an important determinant of the probability that a women works?*
+
+```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+# -------------------------
+# Q2a.
+
+# loading data
+data0 <- read.table("WomenWork.dat",header = T)
+
+# setting initial values
+tau <- 10 
+y <- data0[,1]
+X <- as.matrix(data0[,2:9])
+nCov <- dim(X)[2]
+covNames <- names(data0)[2:9]
+
+# Prior
+mu <- as.vector(rep(0,nCov))
+sigma <- tau^2*diag(nCov)
+
+set.seed(12345)
+# Logistic regression function that returns the regression coefficients
+logiPost <- function(betas,y,X,sigma){
+  pred <- as.vector(X%*%betas)
+  loglike <- sum(y*pred-log(1+exp(pred)))
+  logprior <- dmvnorm(betas, mean=rep(0,length(betas)), sigma, log=T)
+  return(loglike+logprior)
+}
+
+# setting initial values
+initVal <- as.vector(rep(0,nCov)) 
+# optimize over the betas
+optRes <- optim(initVal,logiPost,gr=NULL,y,X,sigma,method="BFGS",control=list(fnscale=-1),hessian=T)
+
+# retrieving betas 
+beta_hat <- optRes$par
+beta_hes <- -solve(optRes$hessian)
+beta_std <- as.matrix(sqrt(diag(beta_hes)))
+
+# verifing results
+model0 <- glm(Work~0+., data=data0, family=binomial)
+
+# printing results
+colnames(beta_hes) <- covNames
+rownames(beta_hes) <- covNames
+kable(beta_hes)
+
+kable(data.frame(Verification=model0$coefficients,Beta_hat=beta_hat,Beta_std=beta_std))
+
+CI_NSmallChild <- quantile(beta_hat[7], c(0.025,0.975))
+
+kable(data.frame(NSmallChild=CI_NSmallChild))
+```
+
+The number of small children seem to matter. The coefficient is by far the largest, especial compared to the number of larger children a woman has. This would also intuitivaly make sense, because the earlier years of a childs life it demands more attention and it would therefore be more likely for one of the parents to remain at home and not have a job.
+
+## b. 
+
+*Write a function that simulates from the predictive distribution of the response variable in a logistic regression. Use your normal approximation from 2(a). Use that function to simulate and plot the predictive distribution for the Work variable for a 40 year old woman, with two children (3 and 9 years old), 8 years of education, 10 years of experience. and a husband with an income of 10. [Hints: The R package mvtnorm will again be handy. Remember my discussion on how Bayesian prediction can be done by simulation.]*
+
+```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#----------------------------------
+# Q2b.
+
+woman <- c(constant=1,husbandIC=10,educYear=8,expYear=10,expYear2=1,age=40,NSmallChild=1,NBigChild=1)
+
+posterior_betas <- rmvnorm(1000,mean=beta_hat,sigma=beta_hes)
+
+predict_logistic <- function(betas, X){
+  yNew <- (exp(X%*%betas))/(1+exp(X%*%betas))
+  return(yNew)
+}
+
+working <- apply(posterior_betas,1,predict_logistic,X)
+
+hist(working,breaks=50)
+
+cat("The expected value for this woman is: ", mean(working), ", thus the model predicts that she is working.")
+```
+
+## 2c.
+
+*Now, consider 10 women which all have the same features as the woman in 2(b). Rewrite your function and plot the predictive distribution for the number of women, out of these 10, that are working. [Hint: Which distribution can be described as a sum of Bernoulli random variables?]*
+
+```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#----------------------------------
+# Q2c.
+
+woman <- c(constant=1,husbandIC=10,educYear=8,expYear=10,expYear2=1,age=40,NSmallChild=1,NBigChild=1)
+
+nWomen <- 10
+
+pred_work <- data.frame()
+
+set.seed(12345)
+for(i in 1:nWomen){
+  posterior_betas <- rmvnorm(1000,mean=beta_hat,sigma=beta_hes)
+  working <- apply(posterior_betas,1,predict_logistic,X)
+  if(mean(working)>0.5){
+    pred_work <- rbind(pred_work,working)
+  }
+}
+
+hist(as.matrix(pred_work),breaks=50,freq=F)
+```
+
+The binomial distribution can be approximated by a sum of bernoulli's.
 
 \newpage
 
