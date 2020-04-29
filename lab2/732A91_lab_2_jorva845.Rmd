@@ -263,7 +263,11 @@ kable(beta_hes)
 
 kable(data.frame(Verification=model0$coefficients,Beta_hat=beta_hat,Beta_std=beta_std))
 
-CI_NSmallChild <- quantile(beta_hat[7], c(0.025,0.975))
+## find the CI for NSmallChild by simulating from the Post
+set.seed(12345)
+Post_beta_hat = rmvnorm(n=1000, mean=beta_hat, sigma = beta_hes)
+
+CI_NSmallChild <- quantile(Post_beta_hat[,7], c(0.025,0.975))
 
 kable(data.frame(NSmallChild=CI_NSmallChild))
 ```
