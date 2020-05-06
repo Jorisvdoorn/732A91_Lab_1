@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.18)  29 APR 2020 17:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.18)  29 APR 2020 21:12
 entering extended mode
 **./732A91_lab_2_jorva845.tex
 (732A91_lab_2_jorva845.tex
@@ -822,9 +822,9 @@ Package pdftex.def Info: 732A91_lab_2_jorva845_files/figure-latex/unnamed-chunk
 -6-1.pdf  used on input line 353.
 (pdftex.def)             Requested size: 375.81058pt x 171.0866pt.
 [7]
-Overfull \hbox (28.99353pt too wide) in paragraph at lines 357--357
-[]\T1/lmtt/m/n/10 ## The expected value for this woman is:  0.5142 , thus the m
-odel predicts that she is working.[] 
+Overfull \hbox (39.4935pt too wide) in paragraph at lines 357--357
+[]\T1/lmtt/m/n/10 ## The expected value for this woman is:  0.515019 , thus the
+ model predicts that she is working.[] 
  []
 
 <732A91_lab_2_jorva845_files/figure-latex/unnamed-chunk-7-1.pdf, id=131, 650.43
@@ -840,37 +840,37 @@ _lab_2_jorva845_files/figure-latex/unnamed-chunk-7-1.pdf>]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 379.
 
-Underfull \vbox (badness 10000) detected at line 585
+Underfull \vbox (badness 10000) detected at line 587
  []
 
 [9]
-Underfull \vbox (badness 10000) detected at line 585
+Underfull \vbox (badness 10000) detected at line 587
  []
 
 
-Underfull \vbox (badness 10000) detected at line 585
+Underfull \vbox (badness 10000) detected at line 587
  []
 
 [10]
-Underfull \vbox (badness 10000) detected at line 585
+Underfull \vbox (badness 10000) detected at line 587
  []
 
 
-Underfull \vbox (badness 10000) detected at line 585
+Underfull \vbox (badness 10000) detected at line 587
  []
 
 [11]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 587.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 589.
 [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 587.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 589.
 (732A91_lab_2_jorva845.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 587.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 587.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 589.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 589.
  ) 
 Here is how much of TeX's memory you used:
  13847 strings out of 492895
  205111 string characters out of 3133479
- 345927 words of memory out of 3000000
+ 346297 words of memory out of 3000000
  17425 multiletter control sequences out of 15000+200000
  55127 words of font info for 86 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -892,7 +892,7 @@ s/type1/public/lm/lmri10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm
 ogram Files/MiKTeX 2.9/fonts/type1/public/lm/lmtk10.pfb><C:/Program Files/MiKTe
 X 2.9/fonts/type1/public/lm/lmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
 /public/lm/lmtti10.pfb>
-Output written on 732A91_lab_2_jorva845.pdf (12 pages, 909169 bytes).
+Output written on 732A91_lab_2_jorva845.pdf (12 pages, 909198 bytes).
 PDF statistics:
  265 PDF objects out of 1000 (max. 8388607)
  36 named destinations out of 1000 (max. 500000)
