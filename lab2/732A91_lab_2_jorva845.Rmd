@@ -14,7 +14,6 @@ library(knitr)
 library(mvtnorm)
 set.seed(12345)
 ```
-
 # 1. Linear and polynomial regression
 
 *The dataset TempLinkoping.txt contains daily average temperatures (in Celcius degrees) at Malmslätt, Linköping over the course of the year 2018. The response variable is temp and the covariate is*
@@ -172,11 +171,13 @@ hist(x_tilde, freq=F, breaks=20)
 
 ## d.
 
+*Say now that you want to estimate a polynomial model of order 7, but you suspect that higher order terms may not be needed, and you worry about overfitting. Suggest a suitable prior that mitigates this potential problem. You do not need to compute the posterior, just write down your prior. [Hint: the task is to specify $\mu_0$ and $\Omega_0$ in a smart way.]*
+
 To prevent overfitting we suggest adding a regularization term. The proposed prior would like as follows:
 
 $$\beta_i|\sigma^2\sim^{iid}N(0,\frac{\sigma^2}{\lambda})$$
 
-where $\lambda$ will be the smoothness/shrinkage/regularization term.
+where $\lambda$ will be the smoothness/shrinkage/regularization term. $\Omega_0$ and $\lambda$ are relate as $\Omega_0 = \lambda I$. A change in $\lambda$ does not directly affect $\mu_0$. However, it does influence $\mu_n$ through $\Omega_0$. The larger $\lambda$ is, the more shrinkage. 
 
 \newpage
 
@@ -263,17 +264,16 @@ kable(beta_hes)
 
 kable(data.frame(Verification=model0$coefficients,Beta_hat=beta_hat,Beta_std=beta_std))
 
-<<<<<<< HEAD
-set.seed(12345)
-Small_beta_hat <- rmvnorm(n=1000, mean=beta_hat, sigma = beta_hes)
-CI_NSmallChild <- quantile(Small_beta_hat[,7], c(0.025,0.975))
-=======
+
+#set.seed(12345)
+#Small_beta_hat <- rmvnorm(n=1000, mean=beta_hat, sigma = beta_hes)
+#CI_NSmallChild <- c(qnorm(0.025,mean=mean(Small_beta_hat[,7]),sd=beta_std[7]),qnorm(0.975,mean=mean(Small_beta_hat[,7]),sd=beta_std[7]))
+
 ## find the CI for NSmallChild by simulating from the Post
 set.seed(12345)
 Post_beta_hat = rmvnorm(n=1000, mean=beta_hat, sigma = beta_hes)
 
-CI_NSmallChild <- quantile(Post_beta_hat[,7], c(0.025,0.975))
->>>>>>> 6137960c868cadd3b87030841e36f6a037a06b8e
+CI_NSmallChild <- c(qnorm(0.025,mean=mean(Post_beta_hat[,7]),sd=beta_std[7]),qnorm(0.975,mean=mean(Post_beta_hat[,7]),sd=beta_std[7]))
 
 kable(data.frame(NSmallChild=CI_NSmallChild))
 ```
@@ -298,8 +298,10 @@ predict_logistic <- function(betas, X){
 }
 
 working <- apply(posterior_betas,1,predict_logistic,X)
+works <- ifelse(working > 0.5, 1, 0)
 
 hist(working,breaks=50)
+hist(works,breaks=2)
 
 cat("The expected value for this woman is: ", mean(working), ", thus the model predicts that she is working.")
 ```
@@ -331,6 +333,8 @@ hist(as.matrix(pred_work),breaks=50,freq=F)
 ```
 
 The binomial distribution can be approximated by a sum of bernoulli's.
+
+*!!!!2c) Analogically to 2b. This is not a predictive distribution, you should plot a distribution in this case over 11 values (0-10 woman working). Consider using binomial distribution!!!!!!*
 
 \newpage
 

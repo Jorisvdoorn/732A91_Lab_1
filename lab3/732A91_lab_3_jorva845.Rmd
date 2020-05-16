@@ -1,0 +1,98 @@
+---
+title: "732A91 - Lab 3"
+author: "Joris van Doorn || Weng Hang Wong"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width=9, fig.height = 4.1) 
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(mvtnorm)
+set.seed(12345)
+```
+
+# Normal model, mixture of normal model with semi-conjugate prior.
+
+*The data rainfall.dat consist of daily records, from the beginning of 1948 to the end of 1983, of precipitation (rain or snow in units of 1/100 inch, and records of zero precipitation are excluded) at Snoqualmie Falls, Washington. Analyze the data using the following two models.*
+
+## a.
+
+*Assume the daily precipitation ${y_1, ..., y_n}$ are independent normally distributed, $y_1,...,y_n|\mu,\sigma^2\sim N(\mu,\sigma^2)$ where both $\mu$ and $\sigma^2$ are unknown. Let $\mu \sim N(\mu_0,\tau_0^2)$ independently of $\sigma^2 \sim Inv-\chi^2(\nu_0,\sigma_0^2).$*
+
+### i. 
+
+*Implement (code!) a Gibbs sampler that simulates from the joint posterior $p(\mu,\sigma^2|y_1,...,y_n)$. The full conditional posteriors are given on the slides from Lecture 7.*
+
+We have the following full conditional posteriors:
+
+$$\mu|\sigma^2,x\sim N(\mu_n,\tau_n^2)$$
+and
+
+$$\sigma^2|\mu,x \sim Inv-\chi^2(\nu_n,\frac{\nu_0\sigma_0^2+\sum_{i=1}^n(x_i-\mu)^2}{n+\nu_0})$$
+
+where
+
+$$\mu_n = w\bar x+(1-w)\mu_0$$
+$$w=\frac{\frac{n}{\sigma^2}}{\frac{n}{\sigma^2}+\frac{1}{\tau_0^2}}$$
+
+$$\tau_n^2=\frac{\sigma^2}{n}+\tau_0^2$$
+
+```{r,echo=F}
+data0 <- read.table("rainfall.dat",header = F)
+```
+
+\newpage
+
+# 2. Metropolis Random Walk for Poisson regression.
+
+*Consider the following Poisson regression model*
+
+$$y_i|\beta\sim Poisson[exp(x_i^T \beta)],i=1,...,n$$
+
+*where yi is the count for the ith observation in the sample and $x_i$ is the p-dimensional vector with covariate observations for the ith observation. Use the data set eBayNumberOfBidderData.dat. This dataset contains observations from 1000 eBay auctions of coins. The response variable is nBids and records the number of bids in each auction. The remaining variables are features/covariates (x):*
+
+\begin{description}
+  \item[$\bullet$ Const] (for the intercept)
+  \item[$\bullet$ PowerSeller] (is the seller selling large volumes on Ebay?)
+  \item[$\bullet$ VerifyID] (is the seller verified by eBay?)
+  \item[$\bullet$ Sealed] (was the coin sold sealed in never opned envelope?)
+  \item[$\bullet$ MinBlem] (did the coin have a minor defect?)
+  \item[$\bullet$ MajBlem] (a major defect?)
+  \item[$\bullet$ LargNeg] (did the seller get a lot of negative feedback from customers?)
+  \item[$\bullet$ LogBook] (logarithm of the coins book value according to expert sellers. Standardized)
+  \item[$\bullet$ MinBidShare] (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized)
+\end{description}
+
+## a. 
+
+*Obtain the maximum likelihood estimator of $\beta$ in the Poisson regression model for the eBay data [Hint: glm.R, don’t forget that glm() adds its own intercept so don’t input the covariate Const]. Which covariates are significant?*
+
+```{r,echo=F}
+data0 <- read.table("eBayNumberOfBidderData.dat",header = T)
+Y<-data0$nBids
+X<-as.matrix(data0[,3:10])
+
+reg_model <- glm(Y ~ X, family = poisson(link = "log"))
+summary(reg_model)
+```
+
+The intercept, VerifyID, Sealed, Logbook, and MinBidShare are al significant with p < 0.0001. Furthermore is MajBlem significant at p < 0.01. PowerSeller, Minblem, and LargNeg do not appear to be significant.
+
+## b. 
+
+*Let’s now do a Bayesian analysis of the Poisson regression. Let the prior be $\beta\sim N[0,100\*(X^TX)^{-1}$ where X is the nxp covariate matrix. This is a commonly used prior which is called Zellner’s g-prior. Assume first that the posterior density is approximately multivariate normal:*
+
+$$\beta|y\sim N(\tilde\beta, J_y^{-1}(\tilde\beta))$$
+
+*where $\tilde\beta$ is the posterior mode and $J_y(\tilde\beta)$ is the negative Hessian at the posterior mode. $\tilde\beta$ and $J_y(\tilde\beta)$ can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up.).*
+
+\newpage
+
+# Appendix
+
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE,results='show'}
+```
