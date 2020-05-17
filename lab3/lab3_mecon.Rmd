@@ -340,10 +340,127 @@ $$ \beta|y \sim N( \widetilde{\beta}, J^{-1}_y (\tilde{\beta})) $$
 
 ### where $\tilde{\beta}$ is the posterior mode and $J_y(\tilde{\beta})$ is the negative Hessian at the posterior mode. $\tilde{\beta}$ and  $J_y(\tilde{\beta})$ can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up)
 
+*Likelihood of Poisson Regression*
+$$p(y|X,\tilde{\beta}) = \prod^n_{i=1} \frac{exp(y_i \tilde{\beta}x_i)-exp(-exp(\tilde{\beta x_i}))}{y_i!}$$
 
-```{r r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+*Log-likelihood of poisson regression*
+$$p(y_i|x_i,\tilde{\beta}) = \sum^n_{i=1}(y_i\tilde{\beta}x_i -exp(\tilde{\beta}x_i)-log(y_i!)) $$
+
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=FALSE}
+library(mvtnorm)
+
 #2.b
+y=data[,1]
+x=as.matrix(data[,2:10]) #include constant
+colnames(x) = names(data)[2:10]
+nPara = dim(x)[2]
 
+# Prior hyperpara
+mu <- as.vector(rep(0,nPara)) 
+sigma <- 100*solve(t(x)%*%x)
+
+# Modified Mattias' code from lab2
+# Log-posterior function = log(prior)+log(llh)
+set.seed(12345)
+LogPost = function(betaVec, y, x, mu, sigma){
+  pred = x%*%betaVec
+  #log LLH
+  logLLH= sum(y*pred - exp(pred)-log(factorial(y)) )
+  #log prior using dmvnorm from beta vector
+  logPrior = dmvnorm(betaVec, mean=rep(0,length(betaVec)), sigma, log=T)
+  res = logLLH + logPrior
+  return(res)
+}
+
+initValue <- as.vector(rep(0,dim(x)[2])); 
+OptimResults<-optim(initValue,LogPost,gr=NULL,y,x,mu,sigma,method=c("BFGS"),control=list(fnscale=-1),hessian=TRUE)
+
+## find the value of Beta and Hessian
+Beta_tilde = as.matrix(OptimResults$par)
+hessianBeta = -solve(OptimResults$hessian) #we want -Inv Hessian
+approx_PostStd <- as.matrix(sqrt(diag(hessianBeta)))
+
+# Beta table
+library(knitr)
+
+#Covariance Matrix
+colnames(hessianBeta) = names(data)[2:10]
+rownames(hessianBeta) =  names(data)[2:10]
+kable(hessianBeta)
+
+# Beta tilde table
+rownames(Beta_tilde) = names(data)[2:10]
+colnames(Beta_tilde) = "Approximate Beta tilde"
+kable(Beta_tilde)
+
+
+
+```
+
+Comparing to the maximum likelihood estimator $\beta$ we obtained in (a), the posterior mode $\tilde{\beta}$ the result obtained by numerical optimization is very close to $\beta$.
+
+
+### (c) Now, let’s simulate from the actual posterior of $\beta$ using the Metropolis algorithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by $\theta$. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):
+
+
+$$\theta_p | \theta^{i−1} \sim N(\theta^{i−1}, c \cdot \Sigma) ,$$
+where $\Sigma = J^{-1}_y(\tilde{\beta})$
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+library(mvtnorm)
+#2.c
+
+## random walk Metropolis
+set.seed(12345)
+RWMsampler = function(LogPost, tmax,c, X0, proposeSigma,...){
+  t=1
+  X=matrix(X0,nrow=tmax+1, ncol=length(X0))
+  alphaVec = c()
+  while(t<=tmax){
+    Y=as.vector(rmvnorm(1, mean=X[t,], sigma=c*proposeSigma))
+    U=runif(1,min=0,max=1)
+    
+    alpha = min(1, exp(LogPost(Y,...)-LogPost(X[t,],...)) )
+    ##use exp to cancel out the log
+    
+    if(U < alpha){
+      X[t+1,] = Y
+    }
+    else{
+      X[t+1,]=X[t,]
+    }
+    alphaVec[t]=alpha
+    t=t+1
+  }
+  return(list("RWMsample"=X,"alphas="=alphaVec))
+}
+tmax=1000
+c=0.5 # the smaller the quicker it walks
+X0=initValue
+proposeSigma=hessianBeta
+
+MCMC=RWMsampler(LogPost, tmax, c, X0, proposeSigma,y, x, mu, sigma)
+
+# plot the 9 samples covaraite from MCMC
+par(mfrow=c(3,3))
+for(i in 1:9){
+  plot(MCMC$RWMsample[,i],type="l",xlab=names(data)[i+1])
+}
+```
+
+### (d) Use the MCMC draws from c) to simulate from the predictive distribution of the number of bidders in a new auction with the characteristics below. Plot the predictive distribution. What is the probability of no bidders in this new auction?
+• PowerSeller = 1
+• VerifyID = 1
+• Sealed = 1
+• MinBlem = 0
+• MajBlem = 0
+• LargNeg = 0
+• LogBook = 1
+• MinBidShare = 0.5
+
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 
 
 
