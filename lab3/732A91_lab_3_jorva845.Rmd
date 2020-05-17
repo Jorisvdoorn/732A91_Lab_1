@@ -12,6 +12,7 @@ library(tidyverse)
 library(dplyr)
 library(knitr)
 library(mvtnorm)
+library(MASS)
 set.seed(12345)
 ```
 
@@ -43,6 +44,12 @@ $$\tau_n^2=\frac{\sigma^2}{n}+\tau_0^2$$
 
 ```{r,echo=F}
 data0 <- read.table("rainfall.dat",header = F)
+
+#I think mu_n and tau_n is defined as if the sigma2 is known, so like the one in the lecture 2
+#And he solved a question about tau0 and v_0 (or nu_0)
+#And non-informative means having large prior variance, large tau0 and small v_0
+#mu_0  = mean(y), sigma_0_sq = var(y), others = 1
+
 ```
 
 \newpage
@@ -56,15 +63,15 @@ $$y_i|\beta\sim Poisson[exp(x_i^T \beta)],i=1,...,n$$
 *where yi is the count for the ith observation in the sample and $x_i$ is the p-dimensional vector with covariate observations for the ith observation. Use the data set eBayNumberOfBidderData.dat. This dataset contains observations from 1000 eBay auctions of coins. The response variable is nBids and records the number of bids in each auction. The remaining variables are features/covariates (x):*
 
 \begin{description}
-  \item[$\bullet$ Const] (for the intercept)
-  \item[$\bullet$ PowerSeller] (is the seller selling large volumes on Ebay?)
-  \item[$\bullet$ VerifyID] (is the seller verified by eBay?)
-  \item[$\bullet$ Sealed] (was the coin sold sealed in never opned envelope?)
-  \item[$\bullet$ MinBlem] (did the coin have a minor defect?)
-  \item[$\bullet$ MajBlem] (a major defect?)
-  \item[$\bullet$ LargNeg] (did the seller get a lot of negative feedback from customers?)
-  \item[$\bullet$ LogBook] (logarithm of the coins book value according to expert sellers. Standardized)
-  \item[$\bullet$ MinBidShare] (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized)
+\item[$\bullet$ Const] (for the intercept)
+\item[$\bullet$ PowerSeller] (is the seller selling large volumes on Ebay?)
+\item[$\bullet$ VerifyID] (is the seller verified by eBay?)
+\item[$\bullet$ Sealed] (was the coin sold sealed in never opned envelope?)
+\item[$\bullet$ MinBlem] (did the coin have a minor defect?)
+\item[$\bullet$ MajBlem] (a major defect?)
+\item[$\bullet$ LargNeg] (did the seller get a lot of negative feedback from customers?)
+\item[$\bullet$ LogBook] (logarithm of the coins book value according to expert sellers. Standardized)
+\item[$\bullet$ MinBidShare] (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized)
 \end{description}
 
 ## a. 
@@ -72,6 +79,8 @@ $$y_i|\beta\sim Poisson[exp(x_i^T \beta)],i=1,...,n$$
 *Obtain the maximum likelihood estimator of $\beta$ in the Poisson regression model for the eBay data [Hint: glm.R, don’t forget that glm() adds its own intercept so don’t input the covariate Const]. Which covariates are significant?*
 
 ```{r,echo=F}
+#----------------------
+# 2a.
 data0 <- read.table("eBayNumberOfBidderData.dat",header = T)
 Y<-data0$nBids
 X<-as.matrix(data0[,3:10])
@@ -89,6 +98,140 @@ The intercept, VerifyID, Sealed, Logbook, and MinBidShare are al significant wit
 $$\beta|y\sim N(\tilde\beta, J_y^{-1}(\tilde\beta))$$
 
 *where $\tilde\beta$ is the posterior mode and $J_y(\tilde\beta)$ is the negative Hessian at the posterior mode. $\tilde\beta$ and $J_y(\tilde\beta)$ can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up.).*
+
+```{r, echo=F}
+# -------------------------
+# Q2b.
+
+# setting initial values
+y <- as.vector(data0[,1])
+X <- as.matrix(data0[,2:length(data0[1,])])
+nCov <- dim(X)[2]
+covNames <- names(data0)[2:length(data0[1,])]
+
+# Prior
+mu <- as.vector(rep(0,nCov))
+sigma <- as.matrix(100*solve((t(X)%*%X)))
+
+set.seed(12345)
+# Logistic regression function that returns the regression coefficients
+logiPost <- function(betas,y,X,sigma){
+  pred <- as.vector(X%*%betas)
+  lambda0 <- t(X)*betas
+  loglike <- sum(y*pred-exp(pred)-log(factorial(y)))
+  logprior <- dmvnorm(betas, mean=rep(0,length(betas)), sigma, log=T)
+  return(loglike+logprior)
+}
+
+# setting initial values
+initVal <- as.vector(rep(0,nCov)) 
+# optimize over the betas
+optRes <- optim(initVal,logiPost,gr=NULL,y,X,sigma,method="BFGS",control=list(fnscale=-1),hessian=T)
+
+# retrieving betas 
+beta_hat <- optRes$par
+beta_hes <- -solve(optRes$hessian)
+beta_std <- as.matrix(sqrt(diag(beta_hes)))
+
+# printing results
+colnames(beta_hes) <- covNames
+rownames(beta_hes) <- covNames
+kable(beta_hes)
+
+kable(data.frame(Verification=reg_model$coefficients,Beta_hat=beta_hat,Beta_std=beta_std))
+
+```
+
+## c. 
+
+*Now, let’s simulate from the actual posterior of $\beta$ using the Metropolis algorithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by $\theta$. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):*
+
+$$\theta_p|\theta^{i-1}\sim N(\theta^{i-1},c\cdot \sum)$$
+
+*where $\sum = J_y^{-1}(\hat\beta)$ obtained in b). The value c is a tuning parameter and should be an input to your Metropolis function. The user of your Metropolis function should be able to supply her own posterior density function, not necessarily for the Poisson regression, and still be able to use your Metropolis function. This is not so straightforward, unless you have come across function objects in R and the triple dot (...) wildcard argument. I have posted a note (HowToCodeRWM.pdf) on the course web page that describes how to do this in R. Now, use your new Metropolis function to sample from the posterior of $\beta$ in the Poisson regression for the eBay dataset. Assess MCMC convergence by graphical methods.*
+
+```{r, echo=F}
+#---------------------------
+# 2c.
+set.seed(12345)
+
+# the random walk metropolis algorithm in R
+# RWMSampler <- function(N, c=0.25, sigma, logPostFunc, theta, ...){
+#   sample <- theta
+#   for(i in 1:N){
+#     prop <- mvrnorm(n=1, theta, c*as.matrix(sigma))
+#     proposal <- logPostFunc(prop, ...)
+#     target <- logPostFunc(theta, ...)
+#     if(runif(1)<exp(proposal-target)){
+#       theta <- prop
+#       sample <- rbind(sample,theta)
+#     }
+#   }
+#   return(sample)
+# }
+# 
+# c <- 0.1
+# test<-RWMSampler(1000, c=c, sigma = sigma, logPostFunc =logiPost, theta = initVal, y, X, sigma)
+# 
+# plot(test[,9])
+# abline(h=beta_hat[9])
+
+RWMSampler <- function(N, c=0.25, sigma, logPostFunc, theta, ...){
+  sample <- matrix(theta,nrow=N,ncol=length(theta))
+  alphas <- c()
+  for(i in 2:N){
+    prop <- as.vector(mvrnorm(n=1, sample[i-1,], c*as.matrix(sigma)))
+    proposal <- logPostFunc(prop, ...)
+    target <- logPostFunc(sample[i-1,], ...)
+    alpha <- min(1,exp(proposal-target))
+    U <- runif(1,min=0,max=1)
+
+    if(U<alpha){
+      sample[i,] <- prop
+    }else{
+      sample[i,] <- sample[i-1,]
+    }
+    alphas[i] <- alpha
+  }
+  return(list("RWMSample"=sample,"alphas"=alphas))
+}
+
+c <- 0.1
+test<-RWMSampler(1000, c=c, sigma = sigma, logPostFunc =logiPost, theta = initVal, y, X, sigma)
+
+# plot the 9 samples covaraite from MCMC
+par(mfrow=c(3,3))
+for(i in 1:9){
+  plot(test$RWMSample[,i],type="l",xlab=covNames)
+}
+```
+
+## d.
+
+*Use the MCMC draws from c) to simulate from the predictive distribution of the number of bidders in a new auction with the characteristics below. Plot the predictive distribution. What is the probability of no bidders in this new auction?*
+
+\begin{description}
+\item[$\bullet$ PowerSeller] (=1)
+\item[$\bullet$ VerifyID] (=1)
+\item[$\bullet$ Sealed] (=1)
+\item[$\bullet$ MinBlem] (=0)
+\item[$\bullet$ MajBlem] (=0)
+\item[$\bullet$ LargNeg] (=0)
+\item[$\bullet$ LogBook] (=1)
+\item[$\bullet$ MinBidShare] (=0.5)
+\end{description}
+
+```{r,echo=F}
+bidders <- c(Const=1,PowerSeller=1,VerifyID=1,Sealed=1,MinBlem=0,MajBlem=0,LargNeg=0,LogBook=1,MinBidShare=0.5)
+
+set.seed(12345)
+pred_bids <- data.frame()
+
+# for(i in 1:nDraws){
+#   posterior_betas <- rmvnorm(1000,mean=test$RWMSampler*bidders)
+# }
+
+```
 
 \newpage
 
