@@ -299,10 +299,56 @@ legend("topright", legend=c("Mixture of normal density", "Normal density"), col=
 ```
 
 
+# 2. Metropolis Random Walk for Poisson regression.
+Consider the following Poisson regression model
+$$ y_i | \beta \sim Poisson[exp (x^T_i \beta)] , \ \ i = 1, ..., n,$$
+where $y_i$ is the count for the ith observation in the sample and $x_i$ is the p-dimensional vector with covariate observations for the ith observation. Use the data set eBayNumberOfBidderData.dat. This dataset contains observations from 1000 eBay auctions of coins. The response variable is nBids and records the number of bids in each auction. The remaining variables are features/covariates (x):
+
+• Const (for the intercept)
+• PowerSeller (is the seller selling large volumes on eBay?)
+• VerifyID (is the seller verified by eBay?)
+• Sealed (was the coin sold sealed in never opened envelope?)
+• MinBlem (did the coin have a minor defect?)
+• MajBlem (a major defect?)
+• LargNeg (did the seller get a lot of negative feedback from customers?)
+• LogBook (logarithm of the coins book value according to expert sellers. Standardized)
+• MinBidShare (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized).
+
+### (a) Obtain the maximum likelihood estimator of $\beta$ in the Poisson regression model for the eBay data [Hint: glm.R, don’t forget that glm() adds its own intercept so don’t input the covariate Const]. Which covariates are significant?
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#2.a
+data = read.table("eBayNumberOfBidderData.dat",header=T)
+
+# obtain beta
+data1 = data[,-2]
+glm_model= glm(nBids~., family="poisson",data=data1)
+cat("The estimator of beta are:",glm_model$coefficients)
+summary(glm_model)
+
+
+```
+
+By using glm() to obtain the summary of the Posisson regression model, the most signficant covariates are having the most ***, which are VerifyID, Sealed, LogBook and MinBidShare. BajBlem obtain only one star so it is less significant. And the rest covariate are not influenced to our model in this case.
+
+From the significant covariates we can tell that, the most influenced factor to the number of Bids is MinBidShare, the lower the selling price is more appealing to bids.
+
+
+
+### (b) Let’s now do a Bayesian analysis of the Poisson regression. Let the prior be $\beta \sim N[0,100\cdot (X^T X)^(-1)]$ where X is the n x p covariate matrix. This is a commonly used prior which is called Zellner’s g-prior. Assume first that the posterior density is approximately multivariate normal:
+$$ \beta|y \sim N( \widetilde{\beta}, J^{-1}_y (\tilde{\beta})) $$
+
+### where $\tilde{\beta}$ is the posterior mode and $J_y(\tilde{\beta})$ is the negative Hessian at the posterior mode. $\tilde{\beta}$ and  $J_y(\tilde{\beta})$ can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up)
+
+
+```{r r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#2.b
 
 
 
 
+
+```
 
 
 # Appendix
