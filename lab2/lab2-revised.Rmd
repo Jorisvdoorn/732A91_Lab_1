@@ -1,18 +1,9 @@
 ---
-title: "732A91 - Lab 2"
+title: "Bayesian Learning lab2-revised"
 author: "Joris van Doorn || Weng Hang Wong"
-date: "`r format(Sys.time(), '%d %B %Y')`"
+date: "5/18/2020"
 output: pdf_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(fig.width=9, fig.height = 4.1) 
-library(dplyr)
-library(knitr)
-library(mvtnorm)
-set.seed(12345)
-```
 # 1. Linear and polynomial regression
 
 *The dataset TempLinkoping.txt contains daily average temperatures (in Celcius degrees) at Malmslätt, Linköping over the course of the year 2018. The response variable is temp and the covariate is*
@@ -29,6 +20,7 @@ $$temp=\beta_0+\beta_1*time+\beta_2*time^2+\epsilon,\epsilon\sim^{iid}N(0,\sigma
 
 ```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 #-----------------------------------------------------------------------------
+library(mvtnorm)
 # Q1a.
 data0 <- read.table("TempLinkoping.txt", header = TRUE)
 intercept <- rep(1,365)
@@ -178,7 +170,7 @@ $$\beta_i|\sigma^2\sim^{iid}N(0,\frac{\sigma^2}{\lambda})$$
 
 where $\lambda$ will be the smoothness/shrinkage/regularization term. $\Omega_0$ and $\lambda$ are relate as $\Omega_0 = \lambda I$. A change in $\lambda$ does not directly affect $\mu_0$. However, it does influence $\mu_n$ through $\Omega_0$. The larger $\lambda$ is, the more shrinkage. 
 
-\newpage
+
 
 # 2. Posterior approximation for cassification with logistic regression
 
@@ -219,7 +211,7 @@ $$\beta|y,X\sim N(\hat\beta,J_y^{-1}(\hat\beta))$$
 ```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 # -------------------------
 # Q2a.
-
+library(knitr)
 # loading data
 data0 <- read.table("WomenWork.dat",header = T)
 
@@ -244,13 +236,13 @@ logiPost <- function(betas,y,X,sigma){
 }
 
 # setting initial values
-initVal <- as.vector(rep(0,nCov)) 
+initVal <- as.vector(rnorm(dim(X)[2]))
 # optimize over the betas
 optRes <- optim(initVal,logiPost,gr=NULL,y,X,sigma,method="BFGS",control=list(fnscale=-1),hessian=T)
 
 # retrieving betas 
 beta_hat <- optRes$par
-beta_hes <- -solve(optRes$hessian)
+beta_hes <- solve(-optRes$hessian)
 beta_std <- as.matrix(sqrt(diag(beta_hes)))
 
 # verifing results
@@ -283,26 +275,29 @@ The number of small children seem to matter. The coefficient is by far the large
 
 *Write a function that simulates from the predictive distribution of the response variable in a logistic regression. Use your normal approximation from 2(a). Use that function to simulate and plot the predictive distribution for the Work variable for a 40 year old woman, with two children (3 and 9 years old), 8 years of education, 10 years of experience. and a husband with an income of 10. [Hints: The R package mvtnorm will again be handy. Remember my discussion on how Bayesian prediction can be done by simulation.]*
 
+
+
 ```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 #----------------------------------
 # Q2b.
 
 woman <- c(constant=1,husbandIC=10,educYear=8,expYear=10,expYear2=1,age=40,NSmallChild=1,NBigChild=1)
 
-posterior_betas <- rmvnorm(1000,mean=beta_hat,sigma=beta_hes)
+posterior_betas <- rmvnorm(10000,mean=beta_hat,sigma=beta_hes)
 
 predict_logistic <- function(betas, X){
-  yNew <- (exp(X%*%betas))/(1+exp(X%*%betas))
+  yNew <- (exp(X%*%betas)) / (1+exp(X%*%betas))
   return(yNew)
 }
 
-working <- apply(posterior_betas,1,predict_logistic,X)
-works <- ifelse(working > 0.5, 1, 0)
+woman=as.matrix(woman,nrow=1)
 
-hist(working,breaks=50)
-hist(works,breaks=2)
+#predict_logistic(posterior_betas, woman) in rows
+working_pred <- apply(posterior_betas,1,predict_logistic,woman)
 
-cat("The expected value for this woman is: ", mean(working), ", thus the model predicts that she is working.")
+hist(working_pred,freq = F)
+
+cat("The expected value for this woman is: ", mean(working_pred), ", thus the model predicts that she is working.")
 ```
 
 ## 2c.
@@ -313,27 +308,13 @@ cat("The expected value for this woman is: ", mean(working), ", thus the model p
 #----------------------------------
 # Q2c.
 
-woman <- c(constant=1,husbandIC=10,educYear=8,expYear=10,expYear2=1,age=40,NSmallChild=1,NBigChild=1)
+pred = mean(working_pred) #the Probability of working
+pred_bino = rbinom(10000,size=10, prob=pred) #10 women
+hist(pred_bino,main="Prediction on number of working women", xlab="number of working women",freq=F)
 
-nWomen <- 10
-
-pred_work <- data.frame()
-
-set.seed(12345)
-for(i in 1:nWomen){
-  posterior_betas <- rmvnorm(1000,mean=beta_hat,sigma=beta_hes)
-  working <- apply(posterior_betas,1,predict_logistic,X)
-  if(mean(working)>0.5){
-    pred_work <- rbind(pred_work,working)
-  }
-}
-
-hist(as.matrix(pred_work),breaks=50,freq=F)
 ```
 
-The binomial distribution can be approximated by a sum of bernoulli's.
-
-*!!!!2c) Analogically to 2b. This is not a predictive distribution, you should plot a distribution in this case over 11 values (0-10 woman working). Consider using binomial distribution!!!!!!*
+Now, we have n=10 random variables and the probability of working(success) = 0.4775278, then we use binomial distribution to calcution the probability of working.
 
 \newpage
 

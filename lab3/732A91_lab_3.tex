@@ -24,8 +24,8 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={lab3},
-            pdfauthor={Weng Hang Wong},
+            pdftitle={732A91 - Lab 3},
+            pdfauthor={Joris van Doorn \textbar\textbar{} Weng Hang Wong},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -115,15 +115,15 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{lab3}
+  \title{732A91 - Lab 3}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-    \author{Weng Hang Wong}
+    \author{Joris van Doorn \textbar\textbar{} Weng Hang Wong}
     \preauthor{\centering\large\emph}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{4/15/2020}
+    \date{17 五月 2020}
 
 
 \begin{document}
@@ -178,12 +178,23 @@ By using Gibbs Sampler, we simulate the mean and the variance from the
 joint posterior in a 1000 draws.
 
 \begin{verbatim}
+## 
+## Attaching package: 'LaplacesDemon'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:mvtnorm':
+## 
+##     dmvt, rmvt
+\end{verbatim}
+
+\begin{verbatim}
 ## [1] 1547.103
 \end{verbatim}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-1-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-1-1} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-1-2} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-1-2} \end{center}
 
 \hypertarget{ii.-analyze-the-daily-precipitation-using-your-gibbs-sampler-in-a-i.-evaluate-the-convergence-of-the-gibbs-sampler-by-suitable-graphical-methods-for-example-by-plotting-the-trajectories-of-the-sampled-markov-chains.}{%
 \paragraph{ii. Analyze the daily precipitation using your Gibbs sampler
@@ -207,9 +218,9 @@ both Gibbs mean and variance are converaged to the true mean and
 variance. Moreover, the burning period is fast and within 50 iterations,
 based on the initiative parameters are set close to the given data.
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-2-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-2-1} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-2-2} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-2-2} \end{center}
 
 \begin{verbatim}
 ## The value of Gibbs sampling of Mu: 32.29442
@@ -242,15 +253,15 @@ sampler converaged very fast from the first 20 iterations, and after
 in the algorithm of normal mixture, Gibbs sampling with the initial
 hyperparameters work well in fitting the data.
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-3-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-3-1} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-3-2} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-3-2} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-3-3} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-3-3} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-3-4} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-3-4} \end{center}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-3-5} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-3-5} \end{center}
 
 \hypertarget{c-graphical-comparison.}{%
 \subsubsection{(c) Graphical
@@ -268,61 +279,65 @@ fit well on the data density. However, using the mixture of normal
 Density is fitted better than the nornal density one, though it is not
 perfect, but still can cover most of the density of the original data.
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{732A91_lab_3_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
+\newpage
 
 \hypertarget{metropolis-random-walk-for-poisson-regression.}{%
 \section{2. Metropolis Random Walk for Poisson
 regression.}\label{metropolis-random-walk-for-poisson-regression.}}
 
-Consider the following Poisson regression model
-\[ y_i | \beta \sim Poisson[exp (x^T_i \beta)] , \ \ i = 1, ..., n,\]
-where \(y_i\) is the count for the ith observation in the sample and
+\emph{Consider the following Poisson regression model}
+
+\[y_i|\beta\sim Poisson[exp(x_i^T \beta)],i=1,...,n\]
+
+\emph{where yi is the count for the ith observation in the sample and
 \(x_i\) is the p-dimensional vector with covariate observations for the
 ith observation. Use the data set eBayNumberOfBidderData.dat. This
 dataset contains observations from 1000 eBay auctions of coins. The
 response variable is nBids and records the number of bids in each
-auction. The remaining variables are features/covariates (x):
+auction. The remaining variables are features/covariates (x):}
 
-• Const (for the intercept) • PowerSeller (is the seller selling large
-volumes on eBay?) • VerifyID (is the seller verified by eBay?) • Sealed
-(was the coin sold sealed in never opened envelope?) • MinBlem (did the
-coin have a minor defect?) • MajBlem (a major defect?) • LargNeg (did
-the seller get a lot of negative feedback from customers?) • LogBook
-(logarithm of the coins book value according to expert sellers.
-Standardized) • MinBidShare (a variable that measures ratio of the
-minimum selling price (starting price) to the book value. Standardized).
+\begin{description}
+\item[$\bullet$ Const] (for the intercept)
+\item[$\bullet$ PowerSeller] (is the seller selling large volumes on Ebay?)
+\item[$\bullet$ VerifyID] (is the seller verified by eBay?)
+\item[$\bullet$ Sealed] (was the coin sold sealed in never opned envelope?)
+\item[$\bullet$ MinBlem] (did the coin have a minor defect?)
+\item[$\bullet$ MajBlem] (a major defect?)
+\item[$\bullet$ LargNeg] (did the seller get a lot of negative feedback from customers?)
+\item[$\bullet$ LogBook] (logarithm of the coins book value according to expert sellers. Standardized)
+\item[$\bullet$ MinBidShare] (a variable that measures ratio of the minimum selling price (starting price) to the book value. Standardized)
+\end{description}
 
-\hypertarget{a-obtain-the-maximum-likelihood-estimator-of-beta-in-the-poisson-regression-model-for-the-ebay-data-hint-glm.r-dont-forget-that-glm-adds-its-own-intercept-so-dont-input-the-covariate-const.-which-covariates-are-significant}{%
-\subsubsection{\texorpdfstring{(a) Obtain the maximum likelihood
-estimator of \(\beta\) in the Poisson regression model for the eBay data
-{[}Hint: glm.R, don't forget that glm() adds its own intercept so don't
-input the covariate Const{]}. Which covariates are
-significant?}{(a) Obtain the maximum likelihood estimator of \textbackslash beta in the Poisson regression model for the eBay data {[}Hint: glm.R, don't forget that glm() adds its own intercept so don't input the covariate Const{]}. Which covariates are significant?}}\label{a-obtain-the-maximum-likelihood-estimator-of-beta-in-the-poisson-regression-model-for-the-ebay-data-hint-glm.r-dont-forget-that-glm-adds-its-own-intercept-so-dont-input-the-covariate-const.-which-covariates-are-significant}}
+\hypertarget{a.}{%
+\subsection{a.}\label{a.}}
 
-\begin{verbatim}
-## The estimator of beta are: 1.072442 -0.02054076 -0.3945165 0.4438426 -0.05219829 -0.2208712 0.07067246 -0.1206776 -1.894097
-\end{verbatim}
+\emph{Obtain the maximum likelihood estimator of \(\beta\) in the
+Poisson regression model for the eBay data {[}Hint: glm.R, don't forget
+that glm() adds its own intercept so don't input the covariate Const{]}.
+Which covariates are significant?}
 
 \begin{verbatim}
 ## 
 ## Call:
-## glm(formula = nBids ~ ., family = "poisson", data = data1)
+## glm(formula = Y ~ X, family = poisson(link = "log"))
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
 ## -3.5800  -0.7222  -0.0441   0.5269   2.4605  
 ## 
 ## Coefficients:
-##             Estimate Std. Error z value Pr(>|z|)    
-## (Intercept)  1.07244    0.03077  34.848  < 2e-16 ***
-## PowerSeller -0.02054    0.03678  -0.558   0.5765    
-## VerifyID    -0.39452    0.09243  -4.268 1.97e-05 ***
-## Sealed       0.44384    0.05056   8.778  < 2e-16 ***
-## Minblem     -0.05220    0.06020  -0.867   0.3859    
-## MajBlem     -0.22087    0.09144  -2.416   0.0157 *  
-## LargNeg      0.07067    0.05633   1.255   0.2096    
-## LogBook     -0.12068    0.02896  -4.166 3.09e-05 ***
-## MinBidShare -1.89410    0.07124 -26.588  < 2e-16 ***
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)   1.07244    0.03077  34.848  < 2e-16 ***
+## XPowerSeller -0.02054    0.03678  -0.558   0.5765    
+## XVerifyID    -0.39452    0.09243  -4.268 1.97e-05 ***
+## XSealed       0.44384    0.05056   8.778  < 2e-16 ***
+## XMinblem     -0.05220    0.06020  -0.867   0.3859    
+## XMajBlem     -0.22087    0.09144  -2.416   0.0157 *  
+## XLargNeg      0.07067    0.05633   1.255   0.2096    
+## XLogBook     -0.12068    0.02896  -4.166 3.09e-05 ***
+## XMinBidShare -1.89410    0.07124 -26.588  < 2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -335,41 +350,28 @@ significant?}{(a) Obtain the maximum likelihood estimator of \textbackslash beta
 ## Number of Fisher Scoring iterations: 5
 \end{verbatim}
 
-By using glm() to obtain the summary of the Posisson regression model,
-the most signficant covariates are having the most ***, which are
-VerifyID, Sealed, LogBook and MinBidShare. BajBlem obtain only one star
-so it is less significant. And the rest covariate are not influenced to
-our model in this case.
+The intercept, VerifyID, Sealed, Logbook, and MinBidShare are al
+significant with p \textless{} 0.0001. Furthermore is MajBlem
+significant at p \textless{} 0.01. PowerSeller, Minblem, and LargNeg do
+not appear to be significant.
 
-From the significant covariates we can tell that, the most influenced
-factor to the number of Bids is MinBidShare, the lower the selling price
-is more appealing to bids.
+\hypertarget{b.}{%
+\subsection{b.}\label{b.}}
 
-\hypertarget{b-lets-now-do-a-bayesian-analysis-of-the-poisson-regression.-let-the-prior-be-beta-sim-n0100cdot-xt-x-1-where-x-is-the-n-x-p-covariate-matrix.-this-is-a-commonly-used-prior-which-is-called-zellners-g-prior.-assume-first-that-the-posterior-density-is-approximately-multivariate-normal}{%
-\subsubsection{\texorpdfstring{(b) Let's now do a Bayesian analysis of
-the Poisson regression. Let the prior be
-\(\beta \sim N[0,100\cdot (X^T X)^(-1)]\) where X is the n x p covariate
-matrix. This is a commonly used prior which is called Zellner's g-prior.
-Assume first that the posterior density is approximately multivariate
-normal:}{(b) Let's now do a Bayesian analysis of the Poisson regression. Let the prior be \textbackslash beta \textbackslash sim N{[}0,100\textbackslash cdot (X\^{}T X)\^{}(-1){]} where X is the n x p covariate matrix. This is a commonly used prior which is called Zellner's g-prior. Assume first that the posterior density is approximately multivariate normal:}}\label{b-lets-now-do-a-bayesian-analysis-of-the-poisson-regression.-let-the-prior-be-beta-sim-n0100cdot-xt-x-1-where-x-is-the-n-x-p-covariate-matrix.-this-is-a-commonly-used-prior-which-is-called-zellners-g-prior.-assume-first-that-the-posterior-density-is-approximately-multivariate-normal}}
+\emph{Let's now do a Bayesian analysis of the Poisson regression. Let
+the prior be \(\beta\sim N[0,100\*(X^TX)^{-1}\) where X is the nxp
+covariate matrix. This is a commonly used prior which is called
+Zellner's g-prior. Assume first that the posterior density is
+approximately multivariate normal:}
 
-\[ \beta|y \sim N( \widetilde{\beta}, J^{-1}_y (\tilde{\beta})) \]
+\[\beta|y\sim N(\tilde\beta, J_y^{-1}(\tilde\beta))\]
 
-\hypertarget{where-tildebeta-is-the-posterior-mode-and-j_ytildebeta-is-the-negative-hessian-at-the-posterior-mode.-tildebeta-and-j_ytildebeta-can-be-obtained-by-numerical-optimization-optim.r-exactly-like-you-already-did-for-the-logistic-regression-in-lab-2-but-with-the-log-posterior-function-replaced-by-the-corresponding-one-for-the-poisson-model-which-you-have-to-code-up}{%
-\subsubsection{\texorpdfstring{where \(\tilde{\beta}\) is the posterior
-mode and \(J_y(\tilde{\beta})\) is the negative Hessian at the posterior
-mode. \(\tilde{\beta}\) and \(J_y(\tilde{\beta})\) can be obtained by
-numerical optimization (optim.R) exactly like you already did for the
-logistic regression in Lab 2 (but with the log posterior function
-replaced by the corresponding one for the Poisson model, which you have
-to code
-up)}{where \textbackslash tilde\{\textbackslash beta\} is the posterior mode and J\_y(\textbackslash tilde\{\textbackslash beta\}) is the negative Hessian at the posterior mode. \textbackslash tilde\{\textbackslash beta\} and J\_y(\textbackslash tilde\{\textbackslash beta\}) can be obtained by numerical optimization (optim.R) exactly like you already did for the logistic regression in Lab 2 (but with the log posterior function replaced by the corresponding one for the Poisson model, which you have to code up)}}\label{where-tildebeta-is-the-posterior-mode-and-j_ytildebeta-is-the-negative-hessian-at-the-posterior-mode.-tildebeta-and-j_ytildebeta-can-be-obtained-by-numerical-optimization-optim.r-exactly-like-you-already-did-for-the-logistic-regression-in-lab-2-but-with-the-log-posterior-function-replaced-by-the-corresponding-one-for-the-poisson-model-which-you-have-to-code-up}}
-
-\emph{Likelihood of Poisson Regression}
-\[p(y|X,\tilde{\beta}) = \prod^n_{i=1} \frac{exp(y_i \tilde{\beta}x_i)-exp(-exp(\tilde{\beta x_i}))}{y_i!}\]
-
-\emph{Log-likelihood of poisson regression}
-\[p(y_i|x_i,\tilde{\beta}) = \sum^n_{i=1}(y_i\tilde{\beta}x_i -exp(\tilde{\beta}x_i)-log(y_i!)) \]
+\emph{where \(\tilde\beta\) is the posterior mode and
+\(J_y(\tilde\beta)\) is the negative Hessian at the posterior mode.
+\(\tilde\beta\) and \(J_y(\tilde\beta)\) can be obtained by numerical
+optimization (optim.R) exactly like you already did for the logistic
+regression in Lab 2 (but with the log posterior function replaced by the
+corresponding one for the Poisson model, which you have to code up.).}
 
 \begin{longtable}[]{@{}lrrrrrrrrr@{}}
 \toprule
@@ -400,58 +402,86 @@ MinBidShare & 0.0011099 & -0.0005686 & -0.0004293 & -0.0000576 &
 \bottomrule
 \end{longtable}
 
-\begin{longtable}[]{@{}lr@{}}
+\begin{longtable}[]{@{}lrrr@{}}
 \toprule
-& Approximate Beta tilde\tabularnewline
+& Verification & Beta\_hat & Beta\_std\tabularnewline
 \midrule
 \endhead
-Const & 1.0698412\tabularnewline
-PowerSeller & -0.0205125\tabularnewline
-VerifyID & -0.3930060\tabularnewline
-Sealed & 0.4435555\tabularnewline
-Minblem & -0.0524663\tabularnewline
-MajBlem & -0.2212384\tabularnewline
-LargNeg & 0.0706968\tabularnewline
-LogBook & -0.1202177\tabularnewline
-MinBidShare & -1.8919850\tabularnewline
+(Intercept) & 1.0724421 & 1.0698412 & 0.0307484\tabularnewline
+XPowerSeller & -0.0205408 & -0.0205125 & 0.0367842\tabularnewline
+XVerifyID & -0.3945165 & -0.3930060 & 0.0922787\tabularnewline
+XSealed & 0.4438426 & 0.4435555 & 0.0505745\tabularnewline
+XMinblem & -0.0521983 & -0.0524663 & 0.0602047\tabularnewline
+XMajBlem & -0.2208712 & -0.2212384 & 0.0914607\tabularnewline
+XLargNeg & 0.0706725 & 0.0706968 & 0.0563477\tabularnewline
+XLogBook & -0.1206776 & -0.1202177 & 0.0289564\tabularnewline
+XMinBidShare & -1.8940966 & -1.8919850 & 0.0710968\tabularnewline
 \bottomrule
 \end{longtable}
 
-Comparing to the maximum likelihood estimator \(\beta\) we obtained in
-(a), the posterior mode \(\tilde{\beta}\) the result obtained by
-numerical optimization is very close to \(\beta\).
+\hypertarget{c.}{%
+\subsection{c.~}\label{c.}}
 
-\hypertarget{c-now-lets-simulate-from-the-actual-posterior-of-beta-using-the-metropolis-algorithm-and-compare-with-the-approximate-results-in-b.-program-a-general-function-that-uses-the-metropolis-algorithm-to-generate-random-draws-from-an-arbitrary-posterior-density.-in-order-to-show-that-it-is-a-general-function-for-any-model-i-will-denote-the-vector-of-model-parameters-by-theta.-let-the-proposal-density-be-the-multivariate-normal-density-mentioned-in-lecture-8-random-walk-metropolis}{%
-\subsubsection{\texorpdfstring{(c) Now, let's simulate from the actual
-posterior of \(\beta\) using the Metropolis algorithm and compare with
-the approximate results in b). Program a general function that uses the
-Metropolis algorithm to generate random draws from an arbitrary
-posterior density. In order to show that it is a general function for
-any model, I will denote the vector of model parameters by \(\theta\).
-Let the proposal density be the multivariate normal density mentioned in
-Lecture 8 (random walk
-Metropolis):}{(c) Now, let's simulate from the actual posterior of \textbackslash beta using the Metropolis algorithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by \textbackslash theta. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):}}\label{c-now-lets-simulate-from-the-actual-posterior-of-beta-using-the-metropolis-algorithm-and-compare-with-the-approximate-results-in-b.-program-a-general-function-that-uses-the-metropolis-algorithm-to-generate-random-draws-from-an-arbitrary-posterior-density.-in-order-to-show-that-it-is-a-general-function-for-any-model-i-will-denote-the-vector-of-model-parameters-by-theta.-let-the-proposal-density-be-the-multivariate-normal-density-mentioned-in-lecture-8-random-walk-metropolis}}
+\emph{Now, let's simulate from the actual posterior of \(\beta\) using
+the Metropolis algorithm and compare with the approximate results in b).
+Program a general function that uses the Metropolis algorithm to
+generate random draws from an arbitrary posterior density. In order to
+show that it is a general function for any model, I will denote the
+vector of model parameters by \(\theta\). Let the proposal density be
+the multivariate normal density mentioned in Lecture 8 (random walk
+Metropolis):}
 
-\[\theta_p | \theta^{i−1} \sim N(\theta^{i−1}, c \cdot \Sigma) ,\] where
-\(\Sigma = J^{-1}_y(\tilde{\beta})\)
+\[\theta_p|\theta^{i-1}\sim N(\theta^{i-1},c\cdot \sum)\]
 
-\begin{center}\includegraphics[width=0.8\linewidth]{lab3_mecon_files/figure-latex/unnamed-chunk-7-1} \end{center}
+\emph{where \(\sum = J_y^{-1}(\hat\beta)\) obtained in b). The value c
+is a tuning parameter and should be an input to your Metropolis
+function. The user of your Metropolis function should be able to supply
+her own posterior density function, not necessarily for the Poisson
+regression, and still be able to use your Metropolis function. This is
+not so straightforward, unless you have come across function objects in
+R and the triple dot (\ldots) wildcard argument. I have posted a note
+(HowToCodeRWM.pdf) on the course web page that describes how to do this
+in R. Now, use your new Metropolis function to sample from the posterior
+of \(\beta\) in the Poisson regression for the eBay dataset. Assess MCMC
+convergence by graphical methods.}
 
-\hypertarget{d-use-the-mcmc-draws-from-c-to-simulate-from-the-predictive-distribution-of-the-number-of-bidders-in-a-new-auction-with-the-characteristics-below.-plot-the-predictive-distribution.-what-is-the-probability-of-no-bidders-in-this-new-auction}{%
-\subsubsection{(d) Use the MCMC draws from c) to simulate from the
-predictive distribution of the number of bidders in a new auction with
-the characteristics below. Plot the predictive distribution. What is the
-probability of no bidders in this new
-auction?}\label{d-use-the-mcmc-draws-from-c-to-simulate-from-the-predictive-distribution-of-the-number-of-bidders-in-a-new-auction-with-the-characteristics-below.-plot-the-predictive-distribution.-what-is-the-probability-of-no-bidders-in-this-new-auction}}
+\includegraphics{732A91_lab_3_files/figure-latex/unnamed-chunk-7-1.pdf}
 
-• PowerSeller = 1 • VerifyID = 1 • Sealed = 1 • MinBlem = 0 • MajBlem =
-0 • LargNeg = 0 • LogBook = 1 • MinBidShare = 0.5
+\hypertarget{d.}{%
+\subsection{d.}\label{d.}}
+
+\emph{Use the MCMC draws from c) to simulate from the predictive
+distribution of the number of bidders in a new auction with the
+characteristics below. Plot the predictive distribution. What is the
+probability of no bidders in this new auction?}
+
+\begin{description}
+\item[$\bullet$ PowerSeller] (=1)
+\item[$\bullet$ VerifyID] (=1)
+\item[$\bullet$ Sealed] (=1)
+\item[$\bullet$ MinBlem] (=0)
+\item[$\bullet$ MajBlem] (=0)
+\item[$\bullet$ LargNeg] (=0)
+\item[$\bullet$ LogBook] (=1)
+\item[$\bullet$ MinBidShare] (=0.5)
+\end{description}
+
+\newpage
 
 \hypertarget{appendix}{%
 \section{Appendix}\label{appendix}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts\_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts\_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{fig.width=}\DecValTok{9}\NormalTok{, }\DataTypeTok{fig.height =} \FloatTok{4.1}\NormalTok{) }
+
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(mvtnorm)}
+\KeywordTok{library}\NormalTok{(MASS)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
+
 \KeywordTok{library}\NormalTok{(LaplacesDemon)}
 \CommentTok{\# 1.}
 \CommentTok{\#\# (a)}
@@ -669,123 +699,117 @@ auction?}\label{d-use-the-mcmc-draws-from-c-to-simulate-from-the-predictive-dist
 \KeywordTok{lines}\NormalTok{(xGrid,mixDens, }\DataTypeTok{col=}\StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 \KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend=}\KeywordTok{c}\NormalTok{(}\StringTok{"Mixture of normal density"}\NormalTok{, }\StringTok{"Normal density"}\NormalTok{), }\DataTypeTok{col=}\KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{,}\StringTok{"red"}\NormalTok{),}\DataTypeTok{lwd=}\DecValTok{2}\NormalTok{)}
 
-\CommentTok{\#2.a}
-\NormalTok{data =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"eBayNumberOfBidderData.dat"}\NormalTok{,}\DataTypeTok{header=}\NormalTok{T)}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# 2a.}
+\NormalTok{data0 \textless{}{-}}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"eBayNumberOfBidderData.dat"}\NormalTok{,}\DataTypeTok{header =}\NormalTok{ T)}
+\NormalTok{Y\textless{}{-}data0}\OperatorTok{$}\NormalTok{nBids}
+\NormalTok{X\textless{}{-}}\KeywordTok{as.matrix}\NormalTok{(data0[,}\DecValTok{3}\OperatorTok{:}\DecValTok{10}\NormalTok{])}
 
-\CommentTok{\# obtain beta}
-\NormalTok{data1 =}\StringTok{ }\NormalTok{data[,}\OperatorTok{{-}}\DecValTok{2}\NormalTok{]}
-\NormalTok{glm\_model=}\StringTok{ }\KeywordTok{glm}\NormalTok{(nBids}\OperatorTok{\textasciitilde{}}\NormalTok{., }\DataTypeTok{family=}\StringTok{"poisson"}\NormalTok{,}\DataTypeTok{data=}\NormalTok{data1)}
-\KeywordTok{cat}\NormalTok{(}\StringTok{"The estimator of beta are:"}\NormalTok{,glm\_model}\OperatorTok{$}\NormalTok{coefficients)}
-\KeywordTok{summary}\NormalTok{(glm\_model)}
-
-
+\NormalTok{reg\_model \textless{}{-}}\StringTok{ }\KeywordTok{glm}\NormalTok{(Y }\OperatorTok{\textasciitilde{}}\StringTok{ }\NormalTok{X, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{(}\DataTypeTok{link =} \StringTok{"log"}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(reg\_model)}
+\CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# Q2b.}
 \KeywordTok{library}\NormalTok{(mvtnorm)}
+\CommentTok{\# setting initial values}
+\NormalTok{y \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(data0[,}\DecValTok{1}\NormalTok{])}
+\NormalTok{X \textless{}{-}}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(data0[,}\DecValTok{2}\OperatorTok{:}\KeywordTok{length}\NormalTok{(data0[}\DecValTok{1}\NormalTok{,])])}
+\NormalTok{nCov \textless{}{-}}\StringTok{ }\KeywordTok{dim}\NormalTok{(X)[}\DecValTok{2}\NormalTok{]}
+\NormalTok{covNames \textless{}{-}}\StringTok{ }\KeywordTok{names}\NormalTok{(data0)[}\DecValTok{2}\OperatorTok{:}\KeywordTok{length}\NormalTok{(data0[}\DecValTok{1}\NormalTok{,])]}
 
-\CommentTok{\#2.b}
-\NormalTok{y=data[,}\DecValTok{1}\NormalTok{]}
-\NormalTok{x=}\KeywordTok{as.matrix}\NormalTok{(data[,}\DecValTok{2}\OperatorTok{:}\DecValTok{10}\NormalTok{]) }\CommentTok{\#include constant}
-\KeywordTok{colnames}\NormalTok{(x) =}\StringTok{ }\KeywordTok{names}\NormalTok{(data)[}\DecValTok{2}\OperatorTok{:}\DecValTok{10}\NormalTok{]}
-\NormalTok{nPara =}\StringTok{ }\KeywordTok{dim}\NormalTok{(x)[}\DecValTok{2}\NormalTok{]}
+\CommentTok{\# Prior}
+\NormalTok{mu \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,nCov))}
+\NormalTok{sigma \textless{}{-}}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\DecValTok{100}\OperatorTok{*}\KeywordTok{solve}\NormalTok{((}\KeywordTok{t}\NormalTok{(X)}\OperatorTok{\%*\%}\NormalTok{X)))}
 
-\CommentTok{\# Prior hyperpara}
-\NormalTok{mu \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,nPara)) }
-\NormalTok{sigma \textless{}{-}}\StringTok{ }\DecValTok{100}\OperatorTok{*}\KeywordTok{solve}\NormalTok{(}\KeywordTok{t}\NormalTok{(x)}\OperatorTok{\%*\%}\NormalTok{x)}
-
-\CommentTok{\# Modified Mattias\textquotesingle{} code from lab2}
-\CommentTok{\# Log{-}posterior function = log(prior)+log(llh)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
-\NormalTok{LogPost =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(betaVec, y, x, mu, sigma)\{}
-\NormalTok{  pred =}\StringTok{ }\NormalTok{x}\OperatorTok{\%*\%}\NormalTok{betaVec}
-  \CommentTok{\#log LLH}
-\NormalTok{  logLLH=}\StringTok{ }\KeywordTok{sum}\NormalTok{(y}\OperatorTok{*}\NormalTok{pred }\OperatorTok{{-}}\StringTok{ }\KeywordTok{exp}\NormalTok{(pred)}\OperatorTok{{-}}\KeywordTok{log}\NormalTok{(}\KeywordTok{factorial}\NormalTok{(y)) )}
-  \CommentTok{\#log prior using dmvnorm from beta vector}
-\NormalTok{  logPrior =}\StringTok{ }\KeywordTok{dmvnorm}\NormalTok{(betaVec, }\DataTypeTok{mean=}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{length}\NormalTok{(betaVec)), sigma, }\DataTypeTok{log=}\NormalTok{T)}
-\NormalTok{  res =}\StringTok{ }\NormalTok{logLLH }\OperatorTok{+}\StringTok{ }\NormalTok{logPrior}
-  \KeywordTok{return}\NormalTok{(res)}
+\CommentTok{\# Logistic regression function that returns the regression coefficients}
+\NormalTok{logiPost \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(betas,y,X,sigma)\{}
+\NormalTok{  pred \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(X}\OperatorTok{\%*\%}\NormalTok{betas)}
+\NormalTok{  lambda0 \textless{}{-}}\StringTok{ }\KeywordTok{t}\NormalTok{(X)}\OperatorTok{*}\NormalTok{betas}
+\NormalTok{  loglike \textless{}{-}}\StringTok{ }\KeywordTok{sum}\NormalTok{(y}\OperatorTok{*}\NormalTok{pred}\OperatorTok{{-}}\KeywordTok{exp}\NormalTok{(pred)}\OperatorTok{{-}}\KeywordTok{log}\NormalTok{(}\KeywordTok{factorial}\NormalTok{(y)))}
+\NormalTok{  logprior \textless{}{-}}\StringTok{ }\KeywordTok{dmvnorm}\NormalTok{(betas, }\DataTypeTok{mean=}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{length}\NormalTok{(betas)), sigma, }\DataTypeTok{log=}\NormalTok{T)}
+  \KeywordTok{return}\NormalTok{(loglike}\OperatorTok{+}\NormalTok{logprior)}
 \NormalTok{\}}
 
-\NormalTok{initValue \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{dim}\NormalTok{(x)[}\DecValTok{2}\NormalTok{])); }
-\NormalTok{OptimResults\textless{}{-}}\KeywordTok{optim}\NormalTok{(initValue,LogPost,}\DataTypeTok{gr=}\OtherTok{NULL}\NormalTok{,y,x,mu,sigma,}\DataTypeTok{method=}\KeywordTok{c}\NormalTok{(}\StringTok{"BFGS"}\NormalTok{),}\DataTypeTok{control=}\KeywordTok{list}\NormalTok{(}\DataTypeTok{fnscale=}\OperatorTok{{-}}\DecValTok{1}\NormalTok{),}\DataTypeTok{hessian=}\OtherTok{TRUE}\NormalTok{)}
+\CommentTok{\# setting initial values}
+\NormalTok{initVal \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,nCov)) }
+\CommentTok{\# optimize over the betas}
+\NormalTok{optRes \textless{}{-}}\StringTok{ }\KeywordTok{optim}\NormalTok{(initVal,logiPost,}\DataTypeTok{gr=}\OtherTok{NULL}\NormalTok{,y,X,sigma,}\DataTypeTok{method=}\StringTok{"BFGS"}\NormalTok{,}\DataTypeTok{control=}\KeywordTok{list}\NormalTok{(}\DataTypeTok{fnscale=}\OperatorTok{{-}}\DecValTok{1}\NormalTok{),}\DataTypeTok{hessian=}\NormalTok{T)}
 
-\CommentTok{\#\# find the value of Beta and Hessian}
-\NormalTok{Beta\_tilde =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(OptimResults}\OperatorTok{$}\NormalTok{par)}
-\NormalTok{hessianBeta =}\StringTok{ }\OperatorTok{{-}}\KeywordTok{solve}\NormalTok{(OptimResults}\OperatorTok{$}\NormalTok{hessian) }\CommentTok{\#we want {-}Inv Hessian}
-\NormalTok{approx\_PostStd \textless{}{-}}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{diag}\NormalTok{(hessianBeta)))}
+\CommentTok{\# retrieving betas }
+\NormalTok{beta\_hat \textless{}{-}}\StringTok{ }\NormalTok{optRes}\OperatorTok{$}\NormalTok{par}
+\NormalTok{beta\_hes \textless{}{-}}\StringTok{ }\OperatorTok{{-}}\KeywordTok{solve}\NormalTok{(optRes}\OperatorTok{$}\NormalTok{hessian)}
+\NormalTok{beta\_std \textless{}{-}}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{diag}\NormalTok{(beta\_hes)))}
 
-\CommentTok{\# Beta table}
-\KeywordTok{library}\NormalTok{(knitr)}
+\CommentTok{\# printing results}
+\KeywordTok{colnames}\NormalTok{(beta\_hes) \textless{}{-}}\StringTok{ }\NormalTok{covNames}
+\KeywordTok{rownames}\NormalTok{(beta\_hes) \textless{}{-}}\StringTok{ }\NormalTok{covNames}
+\KeywordTok{kable}\NormalTok{(beta\_hes)}
 
-\CommentTok{\#Covariance Matrix}
-\KeywordTok{colnames}\NormalTok{(hessianBeta) =}\StringTok{ }\KeywordTok{names}\NormalTok{(data)[}\DecValTok{2}\OperatorTok{:}\DecValTok{10}\NormalTok{]}
-\KeywordTok{rownames}\NormalTok{(hessianBeta) =}\StringTok{  }\KeywordTok{names}\NormalTok{(data)[}\DecValTok{2}\OperatorTok{:}\DecValTok{10}\NormalTok{]}
-\KeywordTok{kable}\NormalTok{(hessianBeta)}
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Verification=}\NormalTok{reg\_model}\OperatorTok{$}\NormalTok{coefficients,}\DataTypeTok{Beta\_hat=}\NormalTok{beta\_hat,}\DataTypeTok{Beta\_std=}\NormalTok{beta\_std))}
 
-\CommentTok{\# Beta tilde table}
-\KeywordTok{rownames}\NormalTok{(Beta\_tilde) =}\StringTok{ }\KeywordTok{names}\NormalTok{(data)[}\DecValTok{2}\OperatorTok{:}\DecValTok{10}\NormalTok{]}
-\KeywordTok{colnames}\NormalTok{(Beta\_tilde) =}\StringTok{ "Approximate Beta tilde"}
-\KeywordTok{kable}\NormalTok{(Beta\_tilde)}
-
-
-
-\KeywordTok{library}\NormalTok{(mvtnorm)}
-\CommentTok{\#2.c}
-
-\CommentTok{\#\# random walk Metropolis}
+\CommentTok{\#{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\CommentTok{\# 2c.}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
-\NormalTok{RWMsampler =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(LogPost, tmax,c, X0, proposeSigma,...)\{}
-\NormalTok{  t=}\DecValTok{1}
-\NormalTok{  X=}\KeywordTok{matrix}\NormalTok{(X0,}\DataTypeTok{nrow=}\NormalTok{tmax}\OperatorTok{+}\DecValTok{1}\NormalTok{, }\DataTypeTok{ncol=}\KeywordTok{length}\NormalTok{(X0))}
-\NormalTok{  alphaVec =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
-  \ControlFlowTok{while}\NormalTok{(t}\OperatorTok{\textless{}=}\NormalTok{tmax)\{}
-\NormalTok{    Y=}\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rmvnorm}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DataTypeTok{mean=}\NormalTok{X[t,], }\DataTypeTok{sigma=}\NormalTok{c}\OperatorTok{*}\NormalTok{proposeSigma))}
-\NormalTok{    U=}\KeywordTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{min=}\DecValTok{0}\NormalTok{,}\DataTypeTok{max=}\DecValTok{1}\NormalTok{)}
-    
-\NormalTok{    alpha =}\StringTok{ }\KeywordTok{min}\NormalTok{(}\DecValTok{1}\NormalTok{, }\KeywordTok{exp}\NormalTok{(}\KeywordTok{LogPost}\NormalTok{(Y,...)}\OperatorTok{{-}}\KeywordTok{LogPost}\NormalTok{(X[t,],...)) )}
-    \CommentTok{\#\#use exp to cancel out the log}
-    
-    \ControlFlowTok{if}\NormalTok{(U }\OperatorTok{\textless{}}\StringTok{ }\NormalTok{alpha)\{}
-\NormalTok{      X[t}\OperatorTok{+}\DecValTok{1}\NormalTok{,] =}\StringTok{ }\NormalTok{Y}
+
+\CommentTok{\# the random walk metropolis algorithm in R}
+\CommentTok{\# RWMSampler \textless{}{-} function(N, c=0.25, sigma, logPostFunc, theta, ...)\{}
+\CommentTok{\#   sample \textless{}{-} theta}
+\CommentTok{\#   for(i in 1:N)\{}
+\CommentTok{\#     prop \textless{}{-} mvrnorm(n=1, theta, c*as.matrix(sigma))}
+\CommentTok{\#     proposal \textless{}{-} logPostFunc(prop, ...)}
+\CommentTok{\#     target \textless{}{-} logPostFunc(theta, ...)}
+\CommentTok{\#     if(runif(1)\textless{}exp(proposal{-}target))\{}
+\CommentTok{\#       theta \textless{}{-} prop}
+\CommentTok{\#       sample \textless{}{-} rbind(sample,theta)}
+\CommentTok{\#     \}}
+\CommentTok{\#   \}}
+\CommentTok{\#   return(sample)}
+\CommentTok{\# \}}
+\CommentTok{\# }
+\CommentTok{\# c \textless{}{-} 0.1}
+\CommentTok{\# test\textless{}{-}RWMSampler(1000, c=c, sigma = sigma, logPostFunc =logiPost, theta = initVal, y, X, sigma)}
+\CommentTok{\# }
+\CommentTok{\# plot(test[,9])}
+\CommentTok{\# abline(h=beta\_hat[9])}
+
+
+
+\NormalTok{RWMSampler \textless{}{-}}\StringTok{ }\ControlFlowTok{function}\NormalTok{(N, }\DataTypeTok{c=}\FloatTok{0.25}\NormalTok{, sigma, logPostFunc, theta, ...)\{}
+\NormalTok{  sample \textless{}{-}}\StringTok{ }\KeywordTok{matrix}\NormalTok{(theta,}\DataTypeTok{nrow=}\NormalTok{N,}\DataTypeTok{ncol=}\KeywordTok{length}\NormalTok{(theta))}
+\NormalTok{  alphas \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{()}
+  \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\NormalTok{N)\{}
+\NormalTok{    prop \textless{}{-}}\StringTok{ }\KeywordTok{as.vector}\NormalTok{(}\KeywordTok{rmvnorm}\NormalTok{(}\DataTypeTok{n=}\DecValTok{1}\NormalTok{, sample[i}\DecValTok{{-}1}\NormalTok{,], c}\OperatorTok{*}\KeywordTok{as.matrix}\NormalTok{(sigma)))}
+\NormalTok{    proposal \textless{}{-}}\StringTok{ }\KeywordTok{logPostFunc}\NormalTok{(prop, ...)}
+\NormalTok{    target \textless{}{-}}\StringTok{ }\KeywordTok{logPostFunc}\NormalTok{(sample[i}\DecValTok{{-}1}\NormalTok{,], ...)}
+\NormalTok{    alpha \textless{}{-}}\StringTok{ }\KeywordTok{min}\NormalTok{(}\DecValTok{1}\NormalTok{,}\KeywordTok{exp}\NormalTok{(proposal}\OperatorTok{{-}}\NormalTok{target))}
+\NormalTok{    U \textless{}{-}}\StringTok{ }\KeywordTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{min=}\DecValTok{0}\NormalTok{,}\DataTypeTok{max=}\DecValTok{1}\NormalTok{)}
+
+    \ControlFlowTok{if}\NormalTok{(U}\OperatorTok{\textless{}}\NormalTok{alpha)\{}
+\NormalTok{      sample[i,] \textless{}{-}}\StringTok{ }\NormalTok{prop}
+\NormalTok{    \}}\ControlFlowTok{else}\NormalTok{\{}
+\NormalTok{      sample[i,] \textless{}{-}}\StringTok{ }\NormalTok{sample[i}\DecValTok{{-}1}\NormalTok{,]}
 \NormalTok{    \}}
-    \ControlFlowTok{else}\NormalTok{\{}
-\NormalTok{      X[t}\OperatorTok{+}\DecValTok{1}\NormalTok{,]=X[t,]}
-\NormalTok{    \}}
-\NormalTok{    alphaVec[t]=alpha}
-\NormalTok{    t=t}\OperatorTok{+}\DecValTok{1}
+\NormalTok{    alphas[i] \textless{}{-}}\StringTok{ }\NormalTok{alpha}
 \NormalTok{  \}}
-  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\StringTok{"RWMsample"}\NormalTok{=X,}\StringTok{"alphas="}\NormalTok{=alphaVec))}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\StringTok{"RWMSample"}\NormalTok{=sample,}\StringTok{"alphas"}\NormalTok{=alphas))}
 \NormalTok{\}}
-\NormalTok{tmax=}\DecValTok{1000}
-\NormalTok{c=}\FloatTok{0.6} \CommentTok{\# the smaller the quicker it walks}
-\NormalTok{X0=initValue}
-\NormalTok{proposeSigma=hessianBeta}
 
-\NormalTok{MCMC=}\KeywordTok{RWMsampler}\NormalTok{(LogPost, tmax, c, X0, proposeSigma,y, x, mu, sigma)}
+\NormalTok{c \textless{}{-}}\StringTok{ }\FloatTok{0.1}
+\NormalTok{test\textless{}{-}}\KeywordTok{RWMSampler}\NormalTok{(}\DecValTok{10000}\NormalTok{, }\DataTypeTok{c=}\NormalTok{c, }\DataTypeTok{sigma =}\NormalTok{ beta\_hes , }\DataTypeTok{logPostFunc =}\NormalTok{logiPost, }\DataTypeTok{theta =}\NormalTok{ initVal, y, X, sigma)}
 
 \CommentTok{\# plot the 9 samples covaraite from MCMC}
 \KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{))}
 \ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{)\{}
-  \KeywordTok{plot}\NormalTok{(MCMC}\OperatorTok{$}\NormalTok{RWMsample[,i],}\DataTypeTok{type=}\StringTok{"l"}\NormalTok{,}\DataTypeTok{xlab=}\KeywordTok{names}\NormalTok{(data)[i}\OperatorTok{+}\DecValTok{1}\NormalTok{])}
+  \KeywordTok{plot}\NormalTok{(test}\OperatorTok{$}\NormalTok{RWMSample[,i],}\DataTypeTok{type=}\StringTok{"l"}\NormalTok{,}\DataTypeTok{xlab=}\NormalTok{covNames)}
 \NormalTok{\}}
+\NormalTok{bidders \textless{}{-}}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{Const=}\DecValTok{1}\NormalTok{,}\DataTypeTok{PowerSeller=}\DecValTok{1}\NormalTok{,}\DataTypeTok{VerifyID=}\DecValTok{1}\NormalTok{,}\DataTypeTok{Sealed=}\DecValTok{1}\NormalTok{,}\DataTypeTok{MinBlem=}\DecValTok{0}\NormalTok{,}\DataTypeTok{MajBlem=}\DecValTok{0}\NormalTok{,}\DataTypeTok{LargNeg=}\DecValTok{0}\NormalTok{,}\DataTypeTok{LogBook=}\DecValTok{1}\NormalTok{,}\DataTypeTok{MinBidShare=}\FloatTok{0.5}\NormalTok{)}
 
-\NormalTok{x\_given =}\KeywordTok{c}\NormalTok{(}\DataTypeTok{Const =} \DecValTok{1}\NormalTok{,}
-\DataTypeTok{PowerSeller =} \DecValTok{1}\NormalTok{,}
-\DataTypeTok{VerifyID =} \DecValTok{1}\NormalTok{,}
-\DataTypeTok{Sealed =} \DecValTok{1}\NormalTok{,}
-\DataTypeTok{MinBlem =} \DecValTok{0}\NormalTok{,}
-\DataTypeTok{MajBlem =} \DecValTok{0}\NormalTok{,}
-\DataTypeTok{LargNeg =} \DecValTok{0}\NormalTok{,}
-\DataTypeTok{LogBook =} \DecValTok{1}\NormalTok{,}
-\DataTypeTok{MinBidShare =} \FloatTok{0.5}\NormalTok{)}
-
-\NormalTok{mcmc\_beta =}\StringTok{ }\NormalTok{MCMC}\OperatorTok{$}\NormalTok{RWMsample}
-
-\NormalTok{predDist =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{12345}\NormalTok{)}
-\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(mcmc\_beta)[}\DecValTok{1}\NormalTok{])\{}
-\NormalTok{  predDist[i] =}\StringTok{ }\KeywordTok{rpois}\NormalTok{(}\DecValTok{1}\NormalTok{,}\KeywordTok{exp}\NormalTok{(}\KeywordTok{t}\NormalTok{(x\_given) }\OperatorTok{\%*\%}\StringTok{ }\NormalTok{mcmc\_beta[i,]))}
-\NormalTok{\}}
+\NormalTok{pred\_bids \textless{}{-}}\StringTok{ }\KeywordTok{data.frame}\NormalTok{()}
 
-\NormalTok{values=}\KeywordTok{unique}\NormalTok{(predDist)}
+\CommentTok{\# for(i in 1:nDraws)\{}
+\CommentTok{\#   posterior\_betas \textless{}{-} rmvnorm(1000,mean=test$RWMSampler*bidders)}
+\CommentTok{\# \}}
 \end{Highlighting}
 \end{Shaded}
 

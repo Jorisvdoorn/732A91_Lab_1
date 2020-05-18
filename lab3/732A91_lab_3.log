@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  17 MAY 2020 20:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  17 MAY 2020 20:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**lab3_mecon.tex
-(./lab3_mecon.tex
+**732A91_lab_3.tex
+(./732A91_lab_3.tex
 LaTeX2e <2018-12-01>
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
@@ -509,8 +509,8 @@ Package: titling 2009/09/04 v2.1d maketitle typesetting
 \thanksmargin=\skip53
 \droptitle=\skip54
 )
-No file lab3_mecon.aux.
-\openout1 = `lab3_mecon.aux'.
+No file 732A91_lab_3.aux.
+\openout1 = `732A91_lab_3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
 LaTeX Font Info:    ... okay on input line 129.
@@ -586,7 +586,7 @@ LaTeX Info: Redefining \ref on input line 129.
 LaTeX Info: Redefining \pageref on input line 129.
 LaTeX Info: Redefining \nameref on input line 129.
 \@outlinefile=\write4
-\openout4 = `lab3_mecon.out'.
+\openout4 = `732A91_lab_3.out'.
 
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -604,190 +604,22 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 143.
-
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 145.
-
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
-File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 145.
-
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
-File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 145
-.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
-File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 145
-.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
-File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 145.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 145.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 145.
-LaTeX Font Info:    Try loading font information for U+msa on input line 145.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Try loading font information for U+msb on input line 145.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 180.
-
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-<lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf, id=4, 469.755pt x 325.215
-pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf  u
-sed on input line 184.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[1
-
-{/home/mecon/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf, id=29, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf  u
-sed on input line 186.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[2 <./lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-1-2.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf, id=48, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf  u
-sed on input line 210.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf, id=49, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf  u
-sed on input line 212.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[3 <./lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-2-2.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf, id=66, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf  u
-sed on input line 245.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf, id=67, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf  u
-sed on input line 247.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[4 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf, id=80, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf  u
-sed on input line 249.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf, id=81, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf  u
-sed on input line 251.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[5 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-3-3.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf, id=98, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf  u
-sed on input line 253.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[6 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-3-5.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf, id=117, 469.755pt x 325.2
-15pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf  u
-sed on input line 271.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 286.
-
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 300.
-
-
-Overfull \hbox (191.74306pt too wide) in paragraph at lines 304--304
-[]\T1/lmtt/m/n/10 ## The estimator of beta are: 1.072442 -0.02054076 -0.3945165
- 0.4438426 -0.05219829 -0.2208712 0.07067246 -0.1206776 -1.894097[] 
- []
-
-[7 <./lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf>]
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 336
-.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
-File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [8]
-Overfull \hbox (126.27203pt too wide) in alignment at lines 379--401
- [] [] [] [] [] [] [] [] [] [] 
- []
-
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 1 on input line 401.
-
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 2 on input line 418.
-
-
-! Package inputenc Error: Unicode character − (U+2212)
+! Package inputenc Error: Unicode character 五 (U+4E94)
 (inputenc)                not set up for use with LaTeX.
 
 See the inputenc package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.435 \[\theta_p | \theta^{i−
-                               1} \sim N(\theta^{i−1}, c \cdot \Sigma) ,\]...
- 
+l.130 \maketitle
+                 
 Here is how much of TeX's memory you used:
- 10900 strings out of 494553
- 157519 string characters out of 6177720
- 237163 words of memory out of 5000000
- 14398 multiletter control sequences out of 15000+600000
- 44168 words of font info for 42 fonts, out of 8000000 for 9000
+ 10612 strings out of 494553
+ 148941 string characters out of 6177720
+ 218625 words of memory out of 5000000
+ 14189 multiletter control sequences out of 15000+600000
+ 17669 words of font info for 19 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 28i,6n,33p,1058b,449s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,1n,32p,237b,270s stack positions out of 5000i,500n,10000p,200000b,80000s
+
 !  ==> Fatal error occurred, no output PDF file produced!

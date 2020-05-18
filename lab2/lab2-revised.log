@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  17 MAY 2020 20:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  18 MAY 2020 14:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**lab3_mecon.tex
-(./lab3_mecon.tex
+**lab2-revised.tex
+(./lab2-revised.tex
 LaTeX2e <2018-12-01>
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2018/09/03 v1.4i Standard LaTeX document class
@@ -508,9 +508,8 @@ Package: titling 2009/09/04 v2.1d maketitle typesetting
 \thanksmarkwidth=\skip52
 \thanksmargin=\skip53
 \droptitle=\skip54
-)
-No file lab3_mecon.aux.
-\openout1 = `lab3_mecon.aux'.
+) (./lab2-revised.aux)
+\openout1 = `lab2-revised.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
 LaTeX Font Info:    ... okay on input line 129.
@@ -585,8 +584,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 129.
 LaTeX Info: Redefining \pageref on input line 129.
 LaTeX Info: Redefining \nameref on input line 129.
+(./lab2-revised.out) (./lab2-revised.out)
 \@outlinefile=\write4
-\openout4 = `lab3_mecon.out'.
+\openout4 = `lab2-revised.out'.
 
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -603,191 +603,225 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 143.
-
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 145.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 140.
 
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 145.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 140.
 
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 145
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 140
 .
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 145
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 140
 .
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 145.
+(Font)              <10> on input line 140.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 145.
+(Font)              <7> on input line 140.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 145.
-LaTeX Font Info:    Try loading font information for U+msa on input line 145.
+(Font)              <5> on input line 140.
+LaTeX Font Info:    Try loading font information for U+msa on input line 140.
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 145.
+LaTeX Font Info:    Try loading font information for U+msb on input line 140.
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 180.
+<lab2-revised_files/figure-latex/unnamed-chunk-1-1.pdf, id=44, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-1-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-1-1.pdf 
+ used on input line 163.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+<lab2-revised_files/figure-latex/unnamed-chunk-1-2.pdf, id=45, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-1-2.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-1-2.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-1-2.pdf 
+ used on input line 165.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[1
+
+{/home/mecon/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./lab2-rev
+ised_files/figure-latex/unnamed-chunk-1-1.pdf>]
+<lab2-revised_files/figure-latex/unnamed-chunk-1-3.pdf, id=69, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-1-3.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-1-3.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-1-3.pdf 
+ used on input line 167.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[2 <./lab2-revised_files/figure-latex/unnamed-chunk-1-2.pdf> <./lab2-revised_fi
+les/figure-latex/unnamed-chunk-1-3.pdf>]
+<lab2-revised_files/figure-latex/unnamed-chunk-2-1.pdf, id=87, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-2-1.pdf 
+ used on input line 189.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+<lab2-revised_files/figure-latex/unnamed-chunk-2-2.pdf, id=88, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-2-2.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-2-2.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-2-2.pdf 
+ used on input line 191.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+<lab2-revised_files/figure-latex/unnamed-chunk-2-3.pdf, id=89, 469.755pt x 325.
+215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-2-3.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-2-3.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-2-3.pdf 
+ used on input line 193.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[3 <./lab2-revised_files/figure-latex/unnamed-chunk-2-1.pdf> <./lab2-revised_fi
+les/figure-latex/unnamed-chunk-2-2.pdf>]
+<lab2-revised_files/figure-latex/unnamed-chunk-2-4.pdf, id=106, 469.755pt x 325
+.215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-2-4.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-2-4.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-2-4.pdf 
+ used on input line 195.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+<lab2-revised_files/figure-latex/unnamed-chunk-3-1.pdf, id=107, 469.755pt x 325
+.215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-3-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-3-1.pdf 
+ used on input line 204.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[4 <./lab2-revised_files/figure-latex/unnamed-chunk-2-3.pdf> <./lab2-revised_fi
+les/figure-latex/unnamed-chunk-2-4.pdf>]
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 219.
 
 (/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-<lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf, id=4, 469.755pt x 325.215
-pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf  u
-sed on input line 184.
+<lab2-revised_files/figure-latex/unnamed-chunk-4-1.pdf, id=124, 469.755pt x 325
+.215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-4-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-4-1.pdf 
+ used on input line 223.
 (pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[1
+[5 <./lab2-revised_files/figure-latex/unnamed-chunk-3-1.pdf>]
 
-{/home/mecon/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf, id=29, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-1-2.pdf  u
-sed on input line 186.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[2 <./lab3_mecon_files/figure-latex/unnamed-chunk-1-1.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-1-2.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf, id=48, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf  u
-sed on input line 210.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf, id=49, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-2-2.pdf  u
-sed on input line 212.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[3 <./lab3_mecon_files/figure-latex/unnamed-chunk-2-1.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-2-2.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf, id=66, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf  u
-sed on input line 245.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf, id=67, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf  u
-sed on input line 247.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[4 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-1.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf, id=80, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-3.pdf  u
-sed on input line 249.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf, id=81, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf  u
-sed on input line 251.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[5 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-2.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-3-3.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf, id=98, 469.755pt x 325.21
-5pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-3-5.pdf  u
-sed on input line 253.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[6 <./lab3_mecon_files/figure-latex/unnamed-chunk-3-4.pdf> <./lab3_mecon_files/
-figure-latex/unnamed-chunk-3-5.pdf>]
-<lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf, id=117, 469.755pt x 325.2
-15pt>
-File: lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type pd
-f)
-<use lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf>
-Package pdftex.def Info: lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf  u
-sed on input line 271.
-(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 286.
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 253.
 
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-
-Package hyperref Warning: Difference (2) between bookmark levels is greater 
-(hyperref)                than one, level fixed on input line 300.
-
-
-Overfull \hbox (191.74306pt too wide) in paragraph at lines 304--304
-[]\T1/lmtt/m/n/10 ## The estimator of beta are: 1.072442 -0.02054076 -0.3945165
- 0.4438426 -0.05219829 -0.2208712 0.07067246 -0.1206776 -1.894097[] 
- []
-
-[7 <./lab3_mecon_files/figure-latex/unnamed-chunk-4-1.pdf>]
-LaTeX Font Info:    Try loading font information for TS1+lmtt on input line 336
-.
-(/home/mecon/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
-File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [8]
-Overfull \hbox (126.27203pt too wide) in alignment at lines 379--401
- [] [] [] [] [] [] [] [] [] [] 
+[6 <./lab2-revised_files/figure-latex/unnamed-chunk-4-1.pdf>] [7]
+Overfull \hbox (67.7147pt too wide) in alignment at lines 306--311
+ [] [] [] [] [] [] [] [] [] 
  []
 
 
-Package longtable Warning: Column widths have changed
-(longtable)                in table 1 on input line 401.
+Overfull \hbox (67.7147pt too wide) in alignment at lines 311--329
+ [] [] [] [] [] [] [] [] [] 
+ []
+
+<lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf, id=160, 469.755pt x 325
+.215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf 
+ used on input line 375.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[8]
+Overfull \hbox (44.74348pt too wide) in paragraph at lines 379--379
+[]\T1/lmtt/m/n/10 ## The expected value for this woman is:  0.4775278 , thus th
+e model predicts that she is working.[] 
+ []
+
+<lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf, id=169, 469.755pt x 325
+.215pt>
+File: lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type 
+pdf)
+<use lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf>
+Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf 
+ used on input line 390.
+(pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
+[9 <./lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf> <./lab2-revised_fi
+les/figure-latex/unnamed-chunk-7-1.pdf>] [10]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 404.
+[11]
+Underfull \vbox (badness 10000) detected at line 602
+ []
 
 
-Package longtable Warning: Column widths have changed
-(longtable)                in table 2 on input line 418.
+Underfull \vbox (badness 10000) detected at line 602
+ []
+
+[12]
+Underfull \vbox (badness 10000) detected at line 602
+ []
 
 
-! Package inputenc Error: Unicode character − (U+2212)
-(inputenc)                not set up for use with LaTeX.
+Underfull \vbox (badness 10000) detected at line 602
+ []
 
-See the inputenc package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.435 \[\theta_p | \theta^{i−
-                               1} \sim N(\theta^{i−1}, c \cdot \Sigma) ,\]...
- 
+[13]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 606.
+[14]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 606.
+(./lab2-revised.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 606.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 606.
+Package rerunfilecheck Info: File `lab2-revised.out' has not changed.
+(rerunfilecheck)             Checksum: 166669E6A51EF0993662474FA151F568;1180.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 606.
+ ) 
 Here is how much of TeX's memory you used:
- 10900 strings out of 494553
- 157519 string characters out of 6177720
- 237163 words of memory out of 5000000
- 14398 multiletter control sequences out of 15000+600000
- 44168 words of font info for 42 fonts, out of 8000000 for 9000
+ 10879 strings out of 494553
+ 155461 string characters out of 6177720
+ 251082 words of memory out of 5000000
+ 14368 multiletter control sequences out of 15000+600000
+ 44138 words of font info for 42 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 28i,6n,33p,1058b,449s stack positions out of 5000i,500n,10000p,200000b,80000s
-!  ==> Fatal error occurred, no output PDF file produced!
+ 28i,8n,32p,581b,390s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/home/mecon/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/home/mecon/.T
+inyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/mecon/.TinyTeX/texmf-dist
+/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/mecon/.TinyTeX/texmf-dist/fonts/enc/dv
+ips/lm/lm-mathit.enc}{/home/mecon/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mat
+hex.enc}</home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></hom
+e/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></home/mecon/.Tiny
+TeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/mecon/.TinyTeX/texmf-dis
+t/fonts/type1/public/lm/lmmi5.pfb></home/mecon/.TinyTeX/texmf-dist/fonts/type1/
+public/lm/lmmi7.pfb></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr1
+0.pfb></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></home/m
+econ/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr5.pfb></home/mecon/.TinyTeX/t
+exmf-dist/fonts/type1/public/lm/lmr7.pfb></home/mecon/.TinyTeX/texmf-dist/fonts
+/type1/public/lm/lmri10.pfb></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public
+/lm/lmri12.pfb></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pf
+b></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/mecon
+/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/mecon/.TinyTeX/tex
+mf-dist/fonts/type1/public/lm/lmtt10.pfb></home/mecon/.TinyTeX/texmf-dist/fonts
+/type1/public/lm/lmtti10.pfb>
+Output written on lab2-revised.pdf (14 pages, 882056 bytes).
+PDF statistics:
+ 281 PDF objects out of 1000 (max. 8388607)
+ 224 compressed objects within 3 object streams
+ 38 named destinations out of 1000 (max. 500000)
+ 136 words of extra memory for PDF output out of 10000 (max. 10000000)
+

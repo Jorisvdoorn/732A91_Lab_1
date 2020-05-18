@@ -8,7 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.width=9, fig.height = 4.1) 
-library(tidyverse)
+
 library(dplyr)
 library(knitr)
 library(mvtnorm)
@@ -360,7 +360,7 @@ $$\beta|y\sim N(\tilde\beta, J_y^{-1}(\tilde\beta))$$
 ```{r, echo=F}
 # -------------------------
 # Q2b.
-
+library(mvtnorm)
 # setting initial values
 y <- as.vector(data0[,1])
 X <- as.matrix(data0[,2:length(data0[1,])])
@@ -434,11 +434,13 @@ set.seed(12345)
 # plot(test[,9])
 # abline(h=beta_hat[9])
 
+
+
 RWMSampler <- function(N, c=0.25, sigma, logPostFunc, theta, ...){
   sample <- matrix(theta,nrow=N,ncol=length(theta))
   alphas <- c()
   for(i in 2:N){
-    prop <- as.vector(mvrnorm(n=1, sample[i-1,], c*as.matrix(sigma)))
+    prop <- as.vector(rmvnorm(n=1, sample[i-1,], c*as.matrix(sigma)))
     proposal <- logPostFunc(prop, ...)
     target <- logPostFunc(sample[i-1,], ...)
     alpha <- min(1,exp(proposal-target))
@@ -455,7 +457,7 @@ RWMSampler <- function(N, c=0.25, sigma, logPostFunc, theta, ...){
 }
 
 c <- 0.1
-test<-RWMSampler(1000, c=c, sigma = sigma, logPostFunc =logiPost, theta = initVal, y, X, sigma)
+test<-RWMSampler(10000, c=c, sigma = beta_hes , logPostFunc =logiPost, theta = initVal, y, X, sigma)
 
 # plot the 9 samples covaraite from MCMC
 par(mfrow=c(3,3))
@@ -485,9 +487,15 @@ bidders <- c(Const=1,PowerSeller=1,VerifyID=1,Sealed=1,MinBlem=0,MajBlem=0,LargN
 set.seed(12345)
 pred_bids <- data.frame()
 
-# for(i in 1:nDraws){
-#   posterior_betas <- rmvnorm(1000,mean=test$RWMSampler*bidders)
-# }
+mcmc_beta = test$RWMSample
+
+predDist = c()
+set.seed(12345)
+for(i in 1:dim(test$RWMSample)[1]){
+  predDist[i] = rpois(1,exp(t(bidders) %*% mcmc_beta[i,]))
+}
+
+
 
 ```
 

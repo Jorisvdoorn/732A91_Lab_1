@@ -436,7 +436,7 @@ RWMsampler = function(LogPost, tmax,c, X0, proposeSigma,...){
   return(list("RWMsample"=X,"alphas="=alphaVec))
 }
 tmax=1000
-c=0.5 # the smaller the quicker it walks
+c=0.6 # the smaller the quicker it walks
 X0=initValue
 proposeSigma=hessianBeta
 
@@ -462,6 +462,25 @@ for(i in 1:9){
 
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 
+x_given =c(Const = 1,
+PowerSeller = 1,
+VerifyID = 1,
+Sealed = 1,
+MinBlem = 0,
+MajBlem = 0,
+LargNeg = 0,
+LogBook = 1,
+MinBidShare = 0.5)
+
+mcmc_beta = MCMC$RWMsample
+
+predDist = c()
+set.seed(12345)
+for(i in 1:dim(mcmc_beta)[1]){
+  predDist[i] = rpois(1,exp(t(x_given) %*% mcmc_beta[i,]))
+}
+
+values=unique(predDist)
 
 
 
