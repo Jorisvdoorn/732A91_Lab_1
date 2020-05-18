@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  18 MAY 2020 14:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.9.29)  18 MAY 2020 14:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -759,10 +759,10 @@ File: lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type
 pdf)
 <use lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf>
 Package pdftex.def Info: lab2-revised_files/figure-latex/unnamed-chunk-7-1.pdf 
- used on input line 390.
+ used on input line 394.
 (pdftex.def)             Requested size: 375.80452pt x 260.17235pt.
-[9 <./lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf> <./lab2-revised_fi
-les/figure-latex/unnamed-chunk-7-1.pdf>] [10]
+[9 <./lab2-revised_files/figure-latex/unnamed-chunk-6-1.pdf>] [10 <./lab2-revis
+ed_files/figure-latex/unnamed-chunk-7-1.pdf>]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 404.
 [11]
@@ -795,7 +795,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 606.
 Here is how much of TeX's memory you used:
  10879 strings out of 494553
  155461 string characters out of 6177720
- 251082 words of memory out of 5000000
+ 251242 words of memory out of 5000000
  14368 multiletter control sequences out of 15000+600000
  44138 words of font info for 42 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -818,10 +818,10 @@ b></home/mecon/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/mecon
 /.TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb></home/mecon/.TinyTeX/tex
 mf-dist/fonts/type1/public/lm/lmtt10.pfb></home/mecon/.TinyTeX/texmf-dist/fonts
 /type1/public/lm/lmtti10.pfb>
-Output written on lab2-revised.pdf (14 pages, 882056 bytes).
+Output written on lab2-revised.pdf (14 pages, 881926 bytes).
 PDF statistics:
- 281 PDF objects out of 1000 (max. 8388607)
- 224 compressed objects within 3 object streams
+ 280 PDF objects out of 1000 (max. 8388607)
+ 223 compressed objects within 3 object streams
  38 named destinations out of 1000 (max. 500000)
  136 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -295,7 +295,7 @@ woman=as.matrix(woman,nrow=1)
 #predict_logistic(posterior_betas, woman) in rows
 working_pred <- apply(posterior_betas,1,predict_logistic,woman)
 
-hist(working_pred,freq = F)
+hist(working_pred,freq = F,main="",xlab="")
 
 cat("The expected value for this woman is: ", mean(working_pred), ", thus the model predicts that she is working.")
 ```
@@ -304,6 +304,7 @@ cat("The expected value for this woman is: ", mean(working_pred), ", thus the mo
 
 *Now, consider 10 women which all have the same features as the woman in 2(b). Rewrite your function and plot the predictive distribution for the number of women, out of these 10, that are working. [Hint: Which distribution can be described as a sum of Bernoulli random variables?]*
 
+Now, we have n=10 random variables and the probability of working(success) = 0.4775278, then we use binomial distribution to calcution the probability of working women.
 ```{r,echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 #----------------------------------
 # Q2c.
@@ -314,7 +315,7 @@ hist(pred_bino,main="Prediction on number of working women", xlab="number of wor
 
 ```
 
-Now, we have n=10 random variables and the probability of working(success) = 0.4775278, then we use binomial distribution to calcution the probability of working.
+
 
 \newpage
 
