@@ -1,6 +1,6 @@
 ---
-title: "lab3"
-author: "Weng Hang Wong"
+title: "Bayesian Learning - lab3"
+author: "Joris van Doorn , Weng Hang Wong"
 date: "4/15/2020"
 output: pdf_document
 ---
@@ -335,6 +335,7 @@ From the significant covariates we can tell that, the most influenced factor to 
 
 
 
+
 ### (b) Let’s now do a Bayesian analysis of the Poisson regression. Let the prior be $\beta \sim N[0,100\cdot (X^T X)^(-1)]$ where X is the n x p covariate matrix. This is a commonly used prior which is called Zellner’s g-prior. Assume first that the posterior density is approximately multivariate normal:
 $$ \beta|y \sim N( \widetilde{\beta}, J^{-1}_y (\tilde{\beta})) $$
 
@@ -347,7 +348,7 @@ $$p(y|X,\tilde{\beta}) = \prod^n_{i=1} \frac{exp(y_i \tilde{\beta}x_i)-exp(-exp(
 $$p(y_i|x_i,\tilde{\beta}) = \sum^n_{i=1}(y_i\tilde{\beta}x_i -exp(\tilde{\beta}x_i)-log(y_i!)) $$
 
 
-```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=FALSE}
+```{r echo=FALSE, warning=FALSE, out.width = "60%",fig.align='center', message=FALSE}
 library(mvtnorm)
 
 #2.b
@@ -401,11 +402,19 @@ kable(Beta_tilde)
 Comparing to the maximum likelihood estimator $\beta$ we obtained in (a), the posterior mode $\tilde{\beta}$ the result obtained by numerical optimization is very close to $\beta$.
 
 
-### (c) Now, let’s simulate from the actual posterior of $\beta$ using the Metropolis algorithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by $\theta$. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):
 
 
-$$\theta_p | \theta^{i−1} \sim N(\theta^{i−1}, c \cdot \Sigma) ,$$
-where $\Sigma = J^{-1}_y(\tilde{\beta})$
+
+### (c) 
+*Now, let’s simulate from the actual posterior of $\beta$ using the Metropolis algorithm and compare with the approximate results in b). Program a general function that uses the Metropolis algorithm to generate random draws from an arbitrary posterior density. In order to show that it is a general function for any model, I will denote the vector of model parameters by $\theta$. Let the proposal density be the multivariate normal density mentioned in Lecture 8 (random walk Metropolis):*
+
+$$\theta_p|\theta^{i-1}\sim N(\theta^{i-1},c\cdot \sum)$$
+
+*where $\sum = J_y^{-1}(\hat\beta)$ obtained in b). The value c is a tuning parameter and should be an input to your Metropolis function. The user of your Metropolis function should be able to supply her own posterior density function, not necessarily for the Poisson regression, and still be able to use your Metropolis function. This is not so straightforward, unless you have come across function objects in R and the triple dot (...) wildcard argument. I have posted a note (HowToCodeRWM.pdf) on the course web page that describes how to do this in R. Now, use your new Metropolis function to sample from the posterior of $\beta$ in the Poisson regression for the eBay dataset. Assess MCMC convergence by graphical methods.*
+
+In order to sample from the proposal density, we use Ramdom Walk metropolis sampler with the samples from the posterior of $\beta$ from(b). In the RWM function, we use the constant c=0.6, in order to get the average acceptance probability within 25-30%. After the sampling, we calculated the average acceptance is 28% here. 
+
+Take a look on the graph which contains the 9 sampling plots of 9 different covariates of the data. Each graph is converaged in 10000 iterations. The following table also indicates the mean of the sampling Betas, which are very close to the sampling from (b).
 
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 library(mvtnorm)
@@ -413,41 +422,58 @@ library(mvtnorm)
 
 ## random walk Metropolis
 set.seed(12345)
-RWMsampler = function(LogPost, tmax,c, X0, proposeSigma,...){
-  t=1
-  X=matrix(X0,nrow=tmax+1, ncol=length(X0))
-  alphaVec = c()
-  while(t<=tmax){
-    Y=as.vector(rmvnorm(1, mean=X[t,], sigma=c*proposeSigma))
-    U=runif(1,min=0,max=1)
-    
-    alpha = min(1, exp(LogPost(Y,...)-LogPost(X[t,],...)) )
-    ##use exp to cancel out the log
-    
-    if(U < alpha){
-      X[t+1,] = Y
-    }
-    else{
-      X[t+1,]=X[t,]
-    }
-    alphaVec[t]=alpha
-    t=t+1
-  }
-  return(list("RWMsample"=X,"alphas="=alphaVec))
-}
-tmax=1000
-c=0.6 # the smaller the quicker it walks
-X0=initValue
-proposeSigma=hessianBeta
 
-MCMC=RWMsampler(LogPost, tmax, c, X0, proposeSigma,y, x, mu, sigma)
+RWMsampler= function(theta0, Ndraws, c, proposeSigma, LogPost, ...){
+  
+  #set gird for sampling theta
+  theta = matrix(0, nrow=Ndraws+1, ncol=length(theta0))
+  theta[1,] = theta0
+  
+  alphas=c()
+  
+  i=2
+  while(i < Ndraws){
+    #simulate theta_p from sample proposal N(theta_i-1, c*Sigma)
+    theta_p = as.vector(rmvnorm(1, mean=theta[i-1,], sigma= c*proposeSigma))
+    
+    #simulat U from runif
+    U = runif(1, 0,1)
+    
+    #calculate alpha prob
+    alpha = min(1, exp(LogPost(theta_p,...)-LogPost(theta[i-1,],...))) #use exp() to cancel log
+    
+    if(U<alpha){
+      theta[i,]=theta_p
+    }else{
+      theta[i,]=theta[i-1,]
+    }
+    
+    alphas[i-1]=alpha
+    i=i+1
+  }
+  return(list(RWMsamplers=theta, alphas=alphas))
+}
+
+theta0=initValue
+Ndraws=10000
+c=0.6
+proposeSigma=hessianBeta
+MCMC = RWMsampler(theta0, Ndraws, c, proposeSigma, LogPost, y, x, mu, sigma)
+
 
 # plot the 9 samples covaraite from MCMC
 par(mfrow=c(3,3))
 for(i in 1:9){
-  plot(MCMC$RWMsample[,i],type="l",xlab=names(data)[i+1])
+  plot(MCMC$RWMsamplers[,i],type="l",xlab=names(data)[i+1])
 }
+
+cat("The average acceptance probability:",mean(MCMC$alphas))
+
+beta_means =colMeans(MCMC$RWMsamplers)
+names(beta_means) = names(data)[2:10]
+kable(beta_means,col.names = "Beta Means")
 ```
+
 
 ### (d) Use the MCMC draws from c) to simulate from the predictive distribution of the number of bidders in a new auction with the characteristics below. Plot the predictive distribution. What is the probability of no bidders in this new auction?
 • PowerSeller = 1
@@ -459,6 +485,8 @@ for(i in 1:9){
 • LogBook = 1
 • MinBidShare = 0.5
 
+
+From the below graph, we can the simulation of the predictive distubuiton of number of bidders. And the probability of no bidders in this new auction is 34.3%.
 
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
 
@@ -472,17 +500,24 @@ LargNeg = 0,
 LogBook = 1,
 MinBidShare = 0.5)
 
-mcmc_beta = MCMC$RWMsample
 
-predDist = c()
+x_given=matrix(x_given,nrow=1, ncol=9)
+
 set.seed(12345)
-for(i in 1:dim(mcmc_beta)[1]){
-  predDist[i] = rpois(1,exp(t(x_given) %*% mcmc_beta[i,]))
+# simulate the prediction dist from possion[exp(t(x)*beta)]
+pred_bids=c()
+beta_means=matrix(beta_means, ncol=1)
+
+for(i in 1:dim(data)[1]){
+  pred_bids[i] = rpois(1,exp(x_given %*% beta_means))
 }
 
-values=unique(predDist)
+hist(pred_bids,freq = F,main="Predictive distribution of number of bidders",xlab="Number of bids")
 
+#the no bid prob
+prob_0bids=length(which(pred_bids == 0))/dim(data)[1]
 
+cat("The probability of no bidders in this new auction:", prob_0bids)
 
 ```
 
