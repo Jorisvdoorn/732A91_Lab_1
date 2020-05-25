@@ -1,0 +1,188 @@
+---
+title: "Bayesian Learning - lab4"
+author: "Joris van Doorn , Weng Hang Wong"
+date: "4/15/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Time series models in Stan
+### (a) Write a function in R that simulates data from the AR(1)-process
+$$x_t = \mu + \phi(x_{t-1}-\mu)+\varepsilon_t, \varepsilon_t\sim N(0,\sigma^2), $$
+
+### for given values of $\mu, \phi \ and\  \sigma^2$ Start the process at $x_1 = \mu$ and then simulate values for $x_t$ for t=2, 3...,T and return the vector $x_{1:T}$ containing all time points. Use $\mu=10,\sigma^2=2 \ and \ T = 2000$ and look at some different realizations (simulations) of $x_{1:T}$ for values of $\phi$ between -1 and 1 (this is the interval of $\phi$ where the AR(1)-process is stable). Include a plot of at least one realization in the report. What effect does the value of $\phi$ have on $x_{1:T}$ ?
+
+
+
+Here, we using the given value to simulate the AR(1)-process, where the values of $\phi$ is between -1 and 1, so we take the $\phi$ as -0.9 and 0.9, so that to observe the difference between two plots.$\phi$ is a momentum parameters that can be used to ajust the algorithm, According to the below two plots, it's very obviously to see that with a low value of $\phi=-0.9$ is moving on the plot very intensively. On the other hand, with a higher value $\phi=0.9$, it comes with a less difference in each iteration so it moves more slowly.
+
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+#1.a
+
+set.seed(12345)
+
+#given values
+mu=10
+sigma2=2
+t=200
+
+AR_1_process = function(mu, sigma2, t, phi){
+  x = c()
+  x[1] = mu
+  for(i in 2:t){
+    eps = rnorm(1,0,sigma2)
+    x[i] = mu +phi*(x[i-1]-mu)+eps
+  }
+  return(x)
+}
+
+
+# plot and compare with different phi
+for(i in c(-0.9,0.9)){
+  AR_1 = AR_1_process(mu,sigma2,t,phi=i)
+  plot(AR_1,type="l", main=paste("AR(1)-process with phi=",i), xlab="t index", ylab="x"  )
+
+}
+
+
+```
+
+
+### (b) Use your function from a) to simulate two AR(1)-processes, $x_{1:T}$ with $\phi = 0.3$ and $y_{1:T}$ with $\phi= 0.95$. Now, treat your simulated vectors as synthetic data, and treat the values of $\mu,\phi \  and \ \sigma^2$ as unknown and estimate them using MCMC. Implement Stan-code that samples from the posterior of the three parameters, using suitable non-informative priors of your choice. [Hint: Lookat the time-series models examples in the Stan user’s guide/reference manual, and note the different parameterization used here.]
+
+##### i. Report the posterior mean, 95% credible intervals and the number of effective posterior samples for the three inferred parameters for each of the simulated AR(1)-process. Are you able to estimate the true values?
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center'}
+
+#1.b
+library(rstan)
+
+AR_x = AR_1_process(mu, sigma2,t,phi = 0.3)
+AR_y = AR_1_process(mu,sigma2,t,phi = 0.95)
+
+#plot(AR_x,type="l")
+#plot(AR_y,type="l")
+
+
+#Stan to simulate mu, sigam2,phi
+#AR(1)model
+#https://mc-stan.org/docs/2_23/stan-users-guide/autoregressive-section.html
+
+StanModel = '
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+parameters {
+  real mu;
+  real<lower=-1,upper=1> phi;
+  real<lower=0> sigma2;
+}
+model {
+  mu ~ normal(10,100);  //non-informative, larger sigma2
+  phi ~ normal(0,10); //-1 1
+  sigma2 ~ scaled_inv_chi_square(1,2);
+  for (n in 2:N)
+    y[n] ~ normal(mu + phi * (y[n-1]-mu), sqrt(sigma2));
+}'
+```
+
+
+
+```{r echo=F, message=F, warning=F}
+# i 
+
+## fit the AR x samples
+N_x = length(AR_x)
+dataX = list(N=N_x, y=AR_x)
+burnin=1000
+niter=2000
+fit_x=stan(model_code = StanModel,data=dataX,warmup=burnin, iter=niter, chains = 4)
+
+## fit the AR y samples
+N_y = length(AR_y)
+dataY = list(N=N_y,y=AR_y)
+fit_y = stan(model_code = StanModel,data=dataY,warmup=burnin, iter=niter, chains = 4)
+
+#print(fit, digits_summary=3)
+```
+
+
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F}
+# Extract posterior samples
+postDraws_x = extract(fit_x)
+postDraws_y = extract(fit_y)
+
+print(fit_x)
+
+library(knitr)
+post_x=data.frame(parameters=c("mu","phi","sigma2"),mean=c(10.43,0.35,4.26),"95CI"=c("(9.98,10.89)","(0.22,0.48)","(3.52,5.16)"),"EffectSamples"=c(3609,3575,3550),"TrueValue"=c(mean(AR_x),0.3,var(AR_x)))
+kable(post_x,caption="Posterior of x")
+
+
+print(fit_y)
+post_y = data.frame(parameters=c("mu","phi","sigma2"),mean=c(15.67,0.98,4.89),"CI"=c("(-41.45,81.54)","(0.93,1.00)","(3.99,6.07)"), "EffectSamples"=c(588,430,342),"TrueValue"=c(mean(AR_y),0.95,var(AR_y)))
+kable(post_y,caption="Posterior of y")
+```
+
+In 2000 iterations, we use rtan to simulate the posterior parameters $\mu,\phi \ and \ \sigma^2$. Look at the table above we can see the posterior mean, 95% CI and effective samples from the simulations. Comparing the posterior mean with the true value from (a), we can see that the simulation from $x_{1:T}$ has the better estimation then from $y_{1:T}$, especially the $\sigma^2$ of y true value is 64.196, compare to the simulation which is 4.89, it is because we set the prior of $\sigma^2$ ~ Normal(0,10). That's the reason why it lower down the accurracy.
+
+##### ii. For each of the two data sets, evaluate the convergence of the samplers and plot the joint posterior of $\mu$ and $\phi$. Comments?
+
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F}
+
+# ii 
+traceplot(fit_x, main="Posterior of x")
+
+plot(mu~phi,data=fit_x, col="grey", main="Joint Distribution of mu and phi in x")
+
+
+traceplot(fit_y, main="posterior of y")
+plot(mu~phi, data=fit_y, col="grey", main="Joint Distribution of mu and phi in y")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Appendix
+
+
+
+```{r ref.label=knitr::all_labels(), echo=T, eval=F}
+
+```
+
+
+
+
+
+
+```
+
+
