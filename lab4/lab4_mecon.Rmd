@@ -93,7 +93,7 @@ model {
 
 
 
-```{r echo=F, message=F, warning=F}
+```{r echo=F, message=F, warning=F, include=FALSE}
 # i 
 
 ## fit the AR x samples
@@ -134,28 +134,174 @@ In 2000 iterations, we use rtan to simulate the posterior parameters $\mu,\phi \
 
 ##### ii. For each of the two data sets, evaluate the convergence of the samplers and plot the joint posterior of $\mu$ and $\phi$. Comments?
 
+First, we look at the $x_{T}$ traceplot and it's joint distribution. The traceplot within 4 chains are converaged well and looks good. Along with the joint distribution with $\mu$ and $\phi$, the scatter points are concentrated. 
+
+However, when we look at the $y_T$ traceplot, we can see the parameters are not converaged well, especially in the $\mu$ one, along the 4 chains iterations, the lines are not covered each other. As well as the joint distribution plot between $\mu$ and $\phi$, which tells us the simulations are not varied a lot and concentrate to the same value for each parameter.
+
 ```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F}
 
 # ii 
 traceplot(fit_x, main="Posterior of x")
 
-plot(mu~phi,data=fit_x, col="grey", main="Joint Distribution of mu and phi in x")
+plot(mu~phi,data=fit_x, main="Joint Distribution of mu and phi in x")
 
 
 traceplot(fit_y, main="posterior of y")
-plot(mu~phi, data=fit_y, col="grey", main="Joint Distribution of mu and phi in y")
+plot(mu~phi, data=fit_y, main="Joint Distribution of mu and phi in y")
 
 ```
 
 
 
+### (c) The data campy.dat contain the number of cases of campylobacter infections in the north of the province Quebec (Canada) in four week intervals from January 1990 to the end of October 2000. It has 13 observations per year and 140 observations in total. Assume that the number of infections $c_t$ at each time point follows an independent Poisson distribution when conditioned on a latent AR(1)-process $x_t$ , that is
+$$c_t | x_t \sim Poisson(exp(x_t)),$$
+### where $x_t$ is an AR(1)-process as in a). Implement and estimate the model in Stan, using suitable priors of your choice. Produce a plot that contains both the data and the posterior mean and 95% credible intervals for the latent intensity $\theta_t = exp(x_t)$ over time. [Hint: Should $x_t$ be seen as data or parameters?]
+
+We implement the possion model in Stan, after we compute the posterior mean, posterior sd from the $x_t$ parameter, than we get the 95% CI interval here in the plot. Since the prior is still non-informative in here, we use the same setting for the parameters as above. Which are:
+mu ~ normal(10,100); 
+phi ~ normal(0,10); 
+sigma2 ~ scaled_inv_chi_square(1,2); 
+
+
+Under non-informative parameters setting, the Posterior mean and the 95% credible interval are not nicely fitting the data. we can see the CI are out of the data and the mean is very high. 
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F,include=F}
+
+# 1.c
+
+data = read.table("campy.dat", header=T)
+
+#Poisson stan model
+
+StanModel_poi = '
+data {
+  int<lower=0> N;
+  int<lower=0> c[N];
+}
+parameters {
+  real mu;
+  real<lower=-1, upper=1> phi;
+  real<lower=0> sigma2;
+  real x[N]; //para in possion
+}
+model {
+  mu ~ normal(10,100); 
+  phi ~ normal(0,10); 
+  sigma2 ~ scaled_inv_chi_square(1,2); 
+  for (n in 2:N){
+    x[n] ~ normal(mu+phi*(x[n-1]-mu),sqrt(sigma2));
+    c[n] ~ poisson(exp(x[n]));
+  }
+}'
+
+## fit the Possion conditioned on 
+N = length(data$c)
+data= list(N=N, c=data$c)
+burnin=1000
+niter=2000
+
+library(rstan)
+fit_poi = stan(model_code = StanModel_poi, data = data, warmup = burnin, iter = niter, chains = 4)
+```
 
 
 
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F}
+
+#print(fit_poisson)
+
+#Extract posterior samples
+post_poi = extract(fit_poi)
+
+# Posterior mean/sd of exp(x_t)
+post_mean = exp(colMeans(post_poi$x))
+post_sd = apply(exp(post_poi$x), 2, sd)
+
+# 95% CI% mean +_ 1.96*sd
+upperCI= post_mean + 1.96*post_sd
+lowerCI= post_mean - 1.96*post_sd
+
+#plot data + posterior mean + 95%CI 
+plot(data$c,type="l", xlab="number of obsevations",ylab="infections")
+lines(post_mean, col="red")
+lines(upperCI, col="green")
+lines(lowerCI, col="green")
+legend("topleft", legend=c("data","post_mean","95%CI"), col=c("black","red","green"), lwd=1)
+  
+
+```
+
+
+### (d) Now, assume that we have a prior belief that the true underlying intensity $\theta_t$  varies more smoothly than the data suggests. Change the prior for $\sigma^2$ so that it becomes informative about that the AR(1)-process increments $\varepsilon_t$ should be small. Re-estimate the model using Stan with the new prior and produce the same plot as in c). Has the posterior for $\theta_t$ changed?
+
+Here, the parameters become informative so that we adjust the parameter setting in the stan model, which are:
+mu ~ normal(10,100); 
+phi ~ normal(0,10); 
+sigma2 ~ scaled_inv_chi_square(50,1); 
+
+Comparing the plot with (c), the Posterior Mean is more accurrate and the Credible interval are relatively narrow down within the data.
+
+```{r  echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F, include=F}
+#1.d
+
+
+##with prior belief
+
+StanModel_poi2 = '
+data {
+  int<lower=0> N;
+  int<lower=0> c[N];
+}
+parameters {
+  real mu;
+  real<lower=-1, upper=1> phi;
+  real<lower=0> sigma2;
+  real x[N]; //para in possion
+}
+model {
+  mu ~ normal(10,100); 
+  phi ~ normal(0,10); 
+  sigma2 ~ scaled_inv_chi_square(100,0.1); //informative
+  for (n in 2:N){
+    x[n] ~ normal(mu+phi*(x[n-1]-mu),sqrt(sigma2));
+    c[n] ~ poisson(exp(x[n]));
+  }
+}'
+
+## fit the Possion conditioned on 
+N = length(data$c)
+data= list(N=N, c=data$c)
+burnin=1000
+niter=2000
+
+library(rstan)
+fit_poi2 = stan(model_code = StanModel_poi2, data = data, warmup = burnin, iter = niter, chains = 4)
 
 
 
+```
 
+```{r echo=FALSE, warning=FALSE, out.width = "80%",fig.align='center', message=F}
+
+
+#Extract posterior samples
+post_poi = extract(fit_poi2)
+
+# Posterior mean/sd of exp(x_t)
+post_mean = exp(colMeans(post_poi$x))
+post_sd = apply(exp(post_poi$x), 2, sd)
+
+# 95% CI% mean +_ 1.96*sd
+upperCI= post_mean + 1.96*post_sd
+lowerCI= post_mean - 1.96*post_sd
+
+#plot data + posterior mean + 95%CI 
+plot(data$c,type="l", xlab="number of obsevations",ylab="infections")
+lines(post_mean, col="red")
+lines(upperCI, col="green")
+lines(lowerCI, col="green")
+legend("topleft", legend=c("data","post_mean","95%CI"), col=c("black","red","green"), lwd=1)
+  
+```
 
 
 
